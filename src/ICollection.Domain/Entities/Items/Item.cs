@@ -4,11 +4,6 @@ using ICollection.Domain.Entities.Comments;
 using ICollection.Domain.Entities.Likes;
 using ICollection.Domain.Entities.Tags;
 using ICollection.Domain.Entities.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Domain.Entities.Items
 {

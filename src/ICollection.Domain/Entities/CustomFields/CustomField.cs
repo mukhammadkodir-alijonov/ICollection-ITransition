@@ -1,7 +1,6 @@
 ﻿using ICollection.Domain.Common;
 using ICollection.Domain.Entities.Collections;
 using ICollection.Domain.Enums;
-using System.Collections.ObjectModel;
 
 namespace ICollection.Domain.Entities.CustomFields
 {
