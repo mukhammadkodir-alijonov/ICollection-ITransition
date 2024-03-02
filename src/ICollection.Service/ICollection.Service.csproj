@@ -10,4 +10,35 @@
     <ProjectReference Include="..\ICollection.DataAccess\ICollection.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Accounts\" />
+    <Folder Include="Interfaces\Admins\" />
+    <Folder Include="Interfaces\Collections\" />
+    <Folder Include="Interfaces\CustomFields\" />
+    <Folder Include="Interfaces\Items\" />
+    <Folder Include="Interfaces\Likes\" />
+    <Folder Include="Interfaces\Tags\" />
+    <Folder Include="Interfaces\Users\" />
+    <Folder Include="Services\Accounts\" />
+    <Folder Include="Services\Admins\" />
+    <Folder Include="Services\Collections\" />
+    <Folder Include="Services\CustomFields\" />
+    <Folder Include="Services\Items\" />
+    <Folder Include="Services\Likes\" />
+    <Folder Include="Services\Tags\" />
+    <Folder Include="Services\Users\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.4.0" />
+    <PackageReference Include="MimeKit" Version="4.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+  </ItemGroup>
+
 </Project>

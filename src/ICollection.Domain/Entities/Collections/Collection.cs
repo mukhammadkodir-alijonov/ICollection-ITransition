@@ -11,7 +11,7 @@ namespace ICollection.Domain.Entities.Collections
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public Topics Topics { get; set; } = Topics.Other;
-        public string ImageUrl { get; set; } = string.Empty;
+        public string ImagePath { get; set; } = string.Empty;
 
         public int ItemId { get; set; }
         public virtual List<Item> Items { get; set; } = default!;

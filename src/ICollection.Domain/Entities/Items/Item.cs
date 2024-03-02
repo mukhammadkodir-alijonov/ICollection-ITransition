@@ -10,7 +10,7 @@ namespace ICollection.Domain.Entities.Items
     public class Item : Auditable
     {
         public string Name { get; set; } = string.Empty;
-        public string ImageUrl { get; set; } = string.Empty;
+        public string ImagePath { get; set; } = string.Empty;
         public Dictionary<string, object>? CustomFieldValues { get; set; }
 
         public int TagId { get; set; }
