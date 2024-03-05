@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Accounts\" />
-    <Folder Include="Interfaces\Admins\" />
-    <Folder Include="Interfaces\Collections\" />
-    <Folder Include="Interfaces\CustomFields\" />
     <Folder Include="Interfaces\Items\" />
     <Folder Include="Interfaces\Likes\" />
     <Folder Include="Interfaces\Tags\" />
@@ -25,6 +21,7 @@
     <Folder Include="Services\CustomFields\" />
     <Folder Include="Services\Items\" />
     <Folder Include="Services\Likes\" />
+    <Folder Include="Services\Common\" />
     <Folder Include="Services\Tags\" />
     <Folder Include="Services\Users\" />
   </ItemGroup>
