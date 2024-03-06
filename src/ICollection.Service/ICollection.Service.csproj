@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Items\" />
-    <Folder Include="Interfaces\Likes\" />
-    <Folder Include="Interfaces\Tags\" />
-    <Folder Include="Interfaces\Users\" />
     <Folder Include="Services\Accounts\" />
     <Folder Include="Services\Admins\" />
     <Folder Include="Services\Collections\" />

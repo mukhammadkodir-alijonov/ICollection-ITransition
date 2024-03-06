@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICollection.Service.Dtos.Tags
+namespace ICollection.Service.Dtos.Users
 {
-    public class Tag
+    public class User
     {
-        public string Name { get; set; } = string.Empty;
     }
 }

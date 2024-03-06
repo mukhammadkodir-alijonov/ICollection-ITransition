@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ICollection.Service.Dtos.Items
 {
-    public class Item
+    public class ItemDto
     {
         public string Name { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;

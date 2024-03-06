@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ICollection.Service.Dtos.Files
 {
-    public class FileModeldto
+    public class FileModelDto
     {
         [AllowedFiles(new string[] { ".xlsx" })]
         [Required]
