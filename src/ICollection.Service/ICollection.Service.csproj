@@ -11,18 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Accounts\" />
-    <Folder Include="Services\Admins\" />
-    <Folder Include="Services\Collections\" />
-    <Folder Include="Services\CustomFields\" />
-    <Folder Include="Services\Items\" />
-    <Folder Include="Services\Likes\" />
-    <Folder Include="Services\Common\" />
-    <Folder Include="Services\Tags\" />
-    <Folder Include="Services\Users\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="ClosedXML" Version="0.102.2" />
