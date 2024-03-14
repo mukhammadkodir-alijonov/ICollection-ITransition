@@ -1,6 +1,7 @@
 ﻿using ICollection.Domain.Common;
 using ICollection.Domain.Entities.Collections;
 using ICollection.Domain.Entities.Comments;
+using ICollection.Domain.Entities.CustomFields;
 using ICollection.Domain.Entities.Likes;
 using ICollection.Domain.Entities.Tags;
 using ICollection.Domain.Entities.Users;
@@ -11,7 +12,10 @@ namespace ICollection.Domain.Entities.Items
     {
         public string Name { get; set; } = string.Empty;
         public string ImagePath { get; set; } = string.Empty;
-        public Dictionary<string, object>? CustomFieldValues { get; set; }
+
+        public int CostomFieldId { get; set; }
+        public virtual List<CustomField> CustomFields { get; set; } = default!;
+        //public Dictionary<string, object>? CustomFieldValues { get; set; }
 
         public int TagId { get; set; }
         public virtual List<Tag> Tag { get; set; } = default!;

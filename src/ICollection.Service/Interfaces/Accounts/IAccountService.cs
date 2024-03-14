@@ -15,8 +15,8 @@ namespace ICollection.Service.Interfaces.Accounts
         public Task<bool> RegisterAsync(AccountRegisterDto registerDto);
         public Task<string> LoginAsync(AccountLoginDto accountLoginDto);
         public Task<bool> PasswordUpdateAsync(PasswordUpdateDto passwordUpdateDto);
-        public Task SendCodeAsync(SendToEmailDto sendToEmail);
-        public Task<bool> VerifyPasswordAsync(UserResetPasswordDto userResetPassword);
         public Task<bool> DeleteByPasswordAsync(UserDeleteDto userDeleteDto);
+        //public Task SendCodeAsync(SendToEmailDto sendToEmail);
+        //public Task<bool> VerifyPasswordAsync(UserResetPasswordDto userResetPassword);
     }
 }
