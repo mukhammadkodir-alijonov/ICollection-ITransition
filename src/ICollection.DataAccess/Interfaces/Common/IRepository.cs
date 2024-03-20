@@ -14,6 +14,7 @@ namespace ICollection.DataAccess.Interfaces.Common
         public void Update(int id, T entity);
 
         public void Delete(int id);
+        //public void Delete(int id, T entity);
         public void TrackingDeteched(T entity);
     }
 }

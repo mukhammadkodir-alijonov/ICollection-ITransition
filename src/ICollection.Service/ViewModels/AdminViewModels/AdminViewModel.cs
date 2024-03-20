@@ -14,6 +14,7 @@ namespace ICollection.Service.ViewModels.AdminViewModels
         public string UserName { get; set; } = String.Empty;
         public string ImagePath { get; set; } = String.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
         public Role Role { get; set; } = Role.Admin;
         public DateTime BirthDate { get; set; } = default!;
         public DateTime CreatedAt { get; set; } = default!;
@@ -28,6 +29,7 @@ namespace ICollection.Service.ViewModels.AdminViewModels
                 BirthDate = model.BirthDate,
                 Role = model.AdminRole,
                 Email = model.Email,
+                Address = model.Address,
                 CreatedAt = model.CreatedAt
             };
         }
