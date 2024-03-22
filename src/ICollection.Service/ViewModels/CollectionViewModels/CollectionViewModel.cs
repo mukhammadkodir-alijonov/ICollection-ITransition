@@ -20,8 +20,11 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
         public string ImagePath { get; set; } = String.Empty;
 
         public DateTime CreatedAt { get; set; } = default!;
+        public DateTime LastUpdatedAt { get; set; } = default!;
+        public int UserId { get; set; }
+        public int CustomFieldId { get; set; }
 
-        public static implicit operator CollectionViewModel(Collection model)
+/*        public static implicit operator CollectionViewModel(Collection model)
         {
             return new CollectionViewModel()
             {
@@ -31,6 +34,6 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
                 ImagePath = model.ImagePath,
                 CreatedAt = model.CreatedAt
             };
-        }
+        }*/
     }
 }

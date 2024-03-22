@@ -25,7 +25,7 @@ namespace ICollection.Service.ViewModels.AdminViewModels
             {
                 Id = model.Id,
                 UserName = model.UserName,
-                ImagePath = model.ImagePath,
+                ImagePath = model.Image,
                 BirthDate = model.BirthDate,
                 Role = model.AdminRole,
                 Email = model.Email,

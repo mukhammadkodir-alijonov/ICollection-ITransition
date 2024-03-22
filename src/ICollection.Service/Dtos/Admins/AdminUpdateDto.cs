@@ -23,7 +23,7 @@ namespace ICollection.Service.Dtos.Admins
             return new Admin()
             {
                 UserName = dto.UserName,
-                ImagePath = dto.ImagePath,
+                Image = dto.ImagePath,
                 BirthDate = dto.BirthDate,
                 Address = dto.Address
             };

@@ -14,7 +14,7 @@ namespace ICollection.Service.Interfaces.Collections
     public interface ICollectionService
     {
         public Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params);
-        public Task<List<LikePerCollectionViewModel>> GetAllLikeByCollectionAsync(int collectionId);
+        //public Task<List<LikePerCollectionViewModel>> GetAllLikeByCollectionAsync(int collectionId);
         public Task<bool> CreateCollectionAsync(CollectionDto collectionCreateDto);
         public Task<bool> DeleteCollectionAsync(int id);
         public Task<bool> UpdateCollectionAsync(int id, CollectionDto collectionUpdateDto);

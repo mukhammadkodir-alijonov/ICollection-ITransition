@@ -1,4 +1,7 @@
-﻿using ICollection.Service.Interfaces.Common;
+﻿using ICollection.Service.Common.Utils;
+using ICollection.Service.Interfaces.Common;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +12,30 @@ namespace ICollection.Service.Services.Common
 {
     public class PaginatorService : IPaginatorService
     {
-        public Task<IList<T>> ToPagedAsync<T>(IList<T> items, int pageNumber, int pageSize)
+        private readonly IHttpContextAccessor _accessor;
+
+        public PaginatorService(IHttpContextAccessor httpContextAccessor)
         {
-            throw new NotImplementedException();
+            this._accessor = httpContextAccessor;
+        }
+        public async Task<IList<T>> ToPagedAsync<T>(IList<T> items, int pageNumber, int pageSize)
+        {
+            int totalItems = items.Count();
+            PaginationMetaData paginationMetaData = new PaginationMetaData(pageNumber, pageSize, totalItems)
+            {
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / (double)pageSize),
+                HasPrevious = pageNumber > 1
+            };
+            paginationMetaData.HasNext = paginationMetaData.CurrentPage < paginationMetaData.TotalPages;
+
+            string json = JsonConvert.SerializeObject(paginationMetaData);
+            _accessor.HttpContext!.Response.Headers.Add("X-Pagination", json);
+
+            return items.Skip(pageNumber * pageSize - pageSize)
+                .Take(pageSize).ToList();
         }
     }
 }

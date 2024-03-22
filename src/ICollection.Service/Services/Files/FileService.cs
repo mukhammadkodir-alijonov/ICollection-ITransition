@@ -1,5 +1,7 @@
-﻿using ICollection.Service.Dtos.Files;
+﻿using ICollection.Service.Common.Helpers;
+using ICollection.Service.Dtos.Files;
 using ICollection.Service.Interfaces.Files;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -11,24 +13,62 @@ namespace ICollection.Service.Services.Files
 {
     public class FileService : IFileService
     {
-        public Task<string> CreateFile(FileModelDto filemodel)
+        private readonly string ASSETS_FOLDER;
+        private readonly string MEDIA_FOLDER;
+        private readonly string RESOUCE_IMAGE_FOLDER;
+        private readonly string AVATAR_FOLDER;
+
+        public FileService(IWebHostEnvironment webHostEnvironment)
         {
-            throw new NotImplementedException();
+            ASSETS_FOLDER = webHostEnvironment.WebRootPath;
+            MEDIA_FOLDER = "media";
+            RESOUCE_IMAGE_FOLDER = Path.Combine(MEDIA_FOLDER, "images");
+            AVATAR_FOLDER = Path.Combine(MEDIA_FOLDER, "avatars");
         }
 
-        public Task<bool> DeleteFileAsync(string path)
+        public async Task<string> CreateFile(FileModelDto filemodel)
         {
-            throw new NotImplementedException();
+            string path = Path.Combine("files", Guid.NewGuid().ToString() + ".xlsx");
+            string fullPath = Path.Combine(ASSETS_FOLDER, path);
+            var stream = new FileStream(fullPath, FileMode.Create);
+            await filemodel.File.CopyToAsync(stream);
+            stream.Close();
+            return fullPath;
         }
 
-        public Task<bool> DeleteImageAsync(string imagePartPath)
+        public async Task<bool> DeleteFileAsync(string path)
         {
-            throw new NotImplementedException();
+            File.Delete(path);
+            return 1 > 0;
         }
 
-        public Task<string> UploadImageAsync(IFormFile image)
+        public async Task<bool> DeleteImageAsync(string imagePartPath)
         {
-            throw new NotImplementedException();
+            string path = Path.Combine(ASSETS_FOLDER, imagePartPath);
+            if (File.Exists(path))
+            {
+                try
+                {
+                    File.Delete(path);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else return false;
+        }
+
+        public async Task<string> UploadImageAsync(IFormFile image)
+        {
+            string fileName = ImageHelper.UniqueName(image.FileName);
+            string partPath = Path.Combine(RESOUCE_IMAGE_FOLDER, fileName);
+            string path = Path.Combine(ASSETS_FOLDER, partPath);
+            var stream = new FileStream(path, FileMode.Create);
+            await image.CopyToAsync(stream);
+            stream.Close();
+            return partPath;
         }
     }
 }

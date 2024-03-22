@@ -14,15 +14,15 @@ namespace ICollection.Service.Interfaces.Admins
 {
     public interface IAdminUserService
     {
-        public Task<bool> BlockAsync(int id);
-        public Task<bool> ActiveAsync(int id);
-        public Task<bool> DeleteAsync(int id);
+        public Task<bool> BlockAsync(List<int> ids);
+        public Task<bool> ActiveAsync(List<int> ids);
+        public Task<bool> DeleteAsync(List<int> ids);
         public Task<List<UserViewModel>> GetAllAsync(string search);
         public Task<PagedList<UserViewModel>> GetAllAsync(PaginationParams @params);
-        public Task<PagedList<UserViewModel>> GetByNameAsync(PaginationParams @params, string name);
+        //public Task<PagedList<UserViewModel>> GetByNameAsync(PaginationParams @params, string name);
         public Task<bool> UpdateAsync(int id, UserUpdateDto userUpdateDto);
-        public Task<bool> UpdateImageAsync(int id, IFormFile from);
+        //public Task<bool> UpdateImageAsync(int id, IFormFile from);
         public Task<bool> DeleteImageAsync(int adminId);
-        public Task<bool> UpdatePasswordAsync(int id, PasswordUpdateDto dto);
+        //public Task<bool> UpdatePasswordAsync(int id, PasswordUpdateDto dto);
     }
 }

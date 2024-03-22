@@ -25,7 +25,7 @@ namespace ICollection.Service.ViewModels.UserViewModels
             {
                 Id = model.Id,
                 UserName = model.UserName,
-                ImagePath = model.ImagePath,
+                ImagePath = model.Image,
                 Email = model.Email,
                 UserRole = model.UserRole,
                 BirthDate = model.BirthDate,

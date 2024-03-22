@@ -36,7 +36,7 @@ namespace ICollection.Service.Services.Admins
         {
             foreach (var iteam in ids)
             {
-                var temp = await _unitOfWork.Users.FindByIdAsync(iteam);
+                var temp = await _unitOfWork.Admins.FindByIdAsync(iteam);
                 if (temp is not null)
                 {
                     _unitOfWork.Admins.Delete(iteam);
@@ -85,8 +85,8 @@ namespace ICollection.Service.Services.Admins
             if (admin is null) throw new NotFoundException("Admin", $"{adminId} not found");
             else
             {
-                await _fileService.DeleteImageAsync(admin.ImagePath!);
-                admin.ImagePath = "";
+                await _fileService.DeleteImageAsync(admin.Image!);
+                admin.Image = "";
                 _unitOfWork.Admins.Update(adminId, admin);
                 var res = await _unitOfWork.SaveChangesAsync();
                 return res > 0;
@@ -124,12 +124,12 @@ namespace ICollection.Service.Services.Admins
             if (adminUpdateDto != null)
             {
                 admin.UserName = String.IsNullOrEmpty(adminUpdateDto.UserName) ? admin.UserName : adminUpdateDto.UserName;
-                admin.ImagePath = String.IsNullOrEmpty(adminUpdateDto.ImagePath) ? admin.ImagePath : adminUpdateDto.ImagePath;
+                admin.Image = String.IsNullOrEmpty(adminUpdateDto.ImagePath) ? admin.Image : adminUpdateDto.ImagePath;
                 admin.BirthDate = admin.BirthDate;
                 admin.Address = String.IsNullOrEmpty(adminUpdateDto.Address) ? admin.Address : adminUpdateDto.Address;
                 if (adminUpdateDto.Image is not null)
                 {
-                    admin.ImagePath = await _fileService.UploadImageAsync(adminUpdateDto.Image);
+                    admin.Image = await _fileService.UploadImageAsync(adminUpdateDto.Image);
                 }
                 admin.LastUpdatedAt = TimeHelper.GetCurrentServerTime();
                 _unitOfWork.Admins.Update(id, admin);
