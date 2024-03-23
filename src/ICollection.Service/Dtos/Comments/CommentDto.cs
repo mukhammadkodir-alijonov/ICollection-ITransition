@@ -12,5 +12,7 @@ namespace ICollection.Service.Dtos.Comments
     {
         [Comment]
         public string CommentText { get; set; } = string.Empty;
+        public int UserId { get; set; }
+        public int ItemId { get; set; }
     }
 }

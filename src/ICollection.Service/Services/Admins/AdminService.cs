@@ -105,12 +105,12 @@ namespace ICollection.Service.Services.Admins
         }
         public async Task<PagedList<AdminViewModel>> GetAllAsync(PaginationParams @params)
         {
-            var query = from admin in _unitOfWork.Admins.GetAll().OrderByDescending(x => x.CreatedAt).Where(aa => aa.Id == admin.Id)
+            var query = from admin in _unitOfWork.Admins.GetAll().OrderByDescending(x => x.CreatedAt)
                         select new AdminViewModel()
                         {
                             Id = admin.Id,
                             UserName = admin.UserName,
-                            ImagePath = admin.ImagePath,
+                            ImagePath = admin.Image,
                             BirthDate = admin.BirthDate,
                             Address = admin.Address
                         };

@@ -11,5 +11,6 @@ namespace ICollection.Service.Dtos.CustomFields
     {
         public string Name { get; set; } = string.Empty;
         public FieldType Type { get; set; } = FieldType.String;
+        public int CollectionId { get; set; }
     }
 }

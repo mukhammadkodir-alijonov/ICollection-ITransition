@@ -1,4 +1,7 @@
-﻿using ICollection.Service.Dtos.CustomFields;
+﻿using ICollection.DataAccess.Interfaces.Common;
+using ICollection.Domain.Entities.CustomFields;
+using ICollection.Service.Common.Exceptions;
+using ICollection.Service.Dtos.CustomFields;
 using ICollection.Service.Interfaces.CustomFields;
 using System;
 using System.Collections.Generic;
@@ -10,14 +13,63 @@ namespace ICollection.Service.Services.CustomFields
 {
     public class CustomFieldService : ICustomFieldService
     {
-        public Task<bool> CreateCustomFieldAsync(CustomFieldDto customField)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CustomFieldService(IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            this._unitOfWork = unitOfWork;
+        }
+        public async Task<bool> CreateCustomFieldForCollectionAsync(CustomFieldDto customFieldDto)
+        {
+            var field = await _unitOfWork.CustomFields.FirstOrDefault(x => x.Name == customFieldDto.Name);
+            if (field == null)
+            {
+                var entity = new CustomField
+                {
+                    Name = field.Name,
+                    Type = field.Type,
+                    CollectionId = field.CollectionId
+                };
+                var res = _unitOfWork.CustomFields.Add(entity);
+                return await _unitOfWork.SaveChangesAsync() > 0;
+            }
+            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "CustomFieldCollection is not created or already exists");
         }
 
-        public Task<bool> DeleteCustomFieldAsync(int id)
+        public async Task<bool> CreateCustomFieldForItemAsync(CustomFieldDto customFieldDto)
         {
-            throw new NotImplementedException();
+            var field = await _unitOfWork.CustomFields.FirstOrDefault(x => x.Name == customFieldDto.Name);
+            if (field == null)
+            {
+                var entity = new CustomField
+                {
+                    Name = field.Name,
+                    Type = field.Type,
+                    ItemId = field.ItemId
+                };
+                var res = _unitOfWork.CustomFields.Add(entity);
+                return await _unitOfWork.SaveChangesAsync() > 0;
+            }
+            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "CustomFieldItem is not created or already exists");
+        }
+
+        public async Task<bool> DeleteCustomFieldAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Invalid custom field ID");
+            }
+
+            var customFieldToDelete = await _unitOfWork.CustomFields.FindByIdAsync(id);
+
+            if (customFieldToDelete == null)
+            {
+                throw new StatusCodeException(System.Net.HttpStatusCode.NotFound, "Custom field not found");
+            }
+
+            _unitOfWork.CustomFields.Delete(id); // Pass the ID of the custom field to delete
+            var result = await _unitOfWork.SaveChangesAsync();
+            return result > 0;
         }
     }
 }
