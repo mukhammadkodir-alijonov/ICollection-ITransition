@@ -19,15 +19,19 @@ namespace ICollection.Service.Services.Collections
 {
     public class CollectionService : ICollectionService
     {
-        private readonly ICollectionService _collectionService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CollectionService(ICollectionService collectionService, IUnitOfWork unitOfWork,IMapper mapper)
+        public CollectionService(IUnitOfWork unitOfWork,IMapper mapper)
         {
-            this._collectionService = collectionService;
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
+        }
+        public async Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params)
+        {
+            var query = _unitOfWork.Collections.GetAll().OrderBy(x => x.Id)
+                .Select(x => _mapper.Map<CollectionViewModel>(x));
+            return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
 
         public async Task<bool> CreateCollectionAsync(CollectionDto collectionCreateDto)
@@ -59,13 +63,6 @@ namespace ICollection.Service.Services.Collections
             _unitOfWork.Collections.Delete(id);
             var result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
-        }
-
-        public async Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params)
-        {
-            var query = _unitOfWork.Collections.GetAll().OrderBy(x => x.Id)
-                .Select(x => _mapper.Map<CollectionViewModel>(x));
-            return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
 
         public async Task<bool> UpdateCollectionAsync(int id, CollectionDto collectionUpdateDto)
