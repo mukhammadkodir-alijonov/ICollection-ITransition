@@ -13,7 +13,7 @@ namespace ICollection.Service.Interfaces.Items
     public interface IitemService
     { 
         public Task<PagedList<ItemViewModel>> GetAllItemAsync(PaginationParams @params);
-        public Task<List<LikePerItemViewModel>> GetAllLikeByItemAsync(int collectionId);
+        //public Task<List<LikePerItemViewModel>> GetAllLikeByItemAsync(int collectionId);
         public Task<bool> CreateItemAsync(ItemDto item);
         public Task<bool> UpdateItemAsync(int id,ItemDto item);
         public Task<bool> DeleteItemAsync(int id);

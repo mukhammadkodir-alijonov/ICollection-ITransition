@@ -12,6 +12,7 @@ namespace ICollection.Domain.Entities.Items
     {
         public string Name { get; set; } = string.Empty;
         public string ImagePath { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         public int CostomFieldId { get; set; }
         public virtual List<CustomField> CustomFields { get; set; } = default!;

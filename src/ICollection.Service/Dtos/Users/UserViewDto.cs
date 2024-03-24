@@ -29,7 +29,7 @@ namespace ICollection.Service.Dtos.Users
                 UserName = user.UserName,
                 ImagePath = user.Image!,
                 BirthDate = user.BirthDate,
-                CreatedAt = user.CreatedAt,
+                CreatedAt = user.CreatedAt,    
             };
         }
     }

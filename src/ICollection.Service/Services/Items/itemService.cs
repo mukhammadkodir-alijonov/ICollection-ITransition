@@ -1,6 +1,14 @@
-﻿using ICollection.Service.Common.Utils;
+﻿using AutoMapper;
+using ICollection.DataAccess.Interfaces.Common;
+using ICollection.Domain.Entities.CustomFields;
+using ICollection.Domain.Entities.Items;
+using ICollection.Service.Common.Exceptions;
+using ICollection.Service.Common.Helpers;
+using ICollection.Service.Common.Utils;
+using ICollection.Service.Dtos.CustomFields;
 using ICollection.Service.Dtos.Items;
 using ICollection.Service.Interfaces.Items;
+using ICollection.Service.ViewModels.CollectionViewModels;
 using ICollection.Service.ViewModels.ItemViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,29 +20,60 @@ namespace ICollection.Service.Services.Items
 {
     public class itemService : IitemService
     {
-        public Task<bool> CreateItemAsync(ItemDto item)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public itemService(IUnitOfWork unitOfWork,IMapper mapper)
         {
-            throw new NotImplementedException();
+            this._unitOfWork = unitOfWork;
+            this._mapper = mapper;
+        }
+        public async Task<bool> CreateItemAsync(ItemDto itemDto)
+        {
+            var item = await _unitOfWork.Iitems.FirstOrDefault(x => x.Id == itemDto.ItemId);
+            if (item == null)
+            {
+                var entity = new Item
+                {
+                    Name = itemDto.Name,
+                    Description = itemDto.Description,
+                    CollectionId = itemDto.CollectionId
+                };
+                var res = _unitOfWork.Iitems.Add(entity);
+                return await _unitOfWork.SaveChangesAsync() > 0;
+            }
+            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is not created or already exists");
         }
 
-        public Task<bool> DeleteItemAsync(int id)
+        public async Task<bool> DeleteItemAsync(int id)
         {
-            throw new NotImplementedException();
+            var item = await _unitOfWork.Iitems.FindByIdAsync(id);
+            if (item is null)
+                throw new StatusCodeException(System.Net.HttpStatusCode.NotFound, "Item not found");
+            _unitOfWork.Iitems.Delete(id);
+            var result = await _unitOfWork.SaveChangesAsync();
+            return result > 0;
         }
 
-        public Task<PagedList<ItemViewModel>> GetAllItemAsync(PaginationParams @params)
+        public async Task<PagedList<ItemViewModel>> GetAllItemAsync(PaginationParams @params)
         {
-            throw new NotImplementedException();
+            var query = _unitOfWork.Iitems.GetAll().OrderBy(x => x.Id)
+                        .Select(x => _mapper.Map<ItemViewModel>(x));
+            return await PagedList<ItemViewModel>.ToPagedListAsync(query, @params);
         }
 
-        public Task<List<LikePerItemViewModel>> GetAllLikeByItemAsync(int collectionId)
+        public async Task<bool> UpdateItemAsync(int id, ItemDto item)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateItemAsync(int id, ItemDto item)
-        {
-            throw new NotImplementedException();
+            var entity = await _unitOfWork.Iitems.FindByIdAsync(id);
+            if (entity is null)
+                throw new StatusCodeException(System.Net.HttpStatusCode.NotFound, "Item not found");
+            entity.Name = item.Name;
+            entity.Description = item.Description;
+            entity.CollectionId = item.CollectionId;
+            entity.LastUpdatedAt = TimeHelper.GetCurrentServerTime();
+            _unitOfWork.Iitems.Update(id,entity);
+            var result = await _unitOfWork.SaveChangesAsync();
+            return result > 0;
         }
     }
 }

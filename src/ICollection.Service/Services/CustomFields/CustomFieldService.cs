@@ -21,14 +21,14 @@ namespace ICollection.Service.Services.CustomFields
         }
         public async Task<bool> CreateCustomFieldForCollectionAsync(CustomFieldDto customFieldDto)
         {
-            var field = await _unitOfWork.CustomFields.FirstOrDefault(x => x.Name == customFieldDto.Name);
+            var field = await _unitOfWork.CustomFields.FirstOrDefault(x => x.Id == customFieldDto.CollectionId);
             if (field == null)
             {
                 var entity = new CustomField
                 {
-                    Name = field.Name,
-                    Type = field.Type,
-                    CollectionId = field.CollectionId
+                    Name = customFieldDto.Name,
+                    Type = customFieldDto.Type,
+                    CollectionId = customFieldDto.CollectionId
                 };
                 var res = _unitOfWork.CustomFields.Add(entity);
                 return await _unitOfWork.SaveChangesAsync() > 0;
@@ -38,14 +38,14 @@ namespace ICollection.Service.Services.CustomFields
 
         public async Task<bool> CreateCustomFieldForItemAsync(CustomFieldDto customFieldDto)
         {
-            var field = await _unitOfWork.CustomFields.FirstOrDefault(x => x.Name == customFieldDto.Name);
+            var field = await _unitOfWork.CustomFields.FirstOrDefault(x => x.Id == customFieldDto.ItemId);
             if (field == null)
             {
                 var entity = new CustomField
                 {
-                    Name = field.Name,
-                    Type = field.Type,
-                    ItemId = field.ItemId
+                    Name = customFieldDto.Name,
+                    Type = customFieldDto.Type,
+                    ItemId = customFieldDto.ItemId
                 };
                 var res = _unitOfWork.CustomFields.Add(entity);
                 return await _unitOfWork.SaveChangesAsync() > 0;
