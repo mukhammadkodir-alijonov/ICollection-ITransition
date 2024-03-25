@@ -36,6 +36,17 @@ namespace ICollection.Service.Services.Users
             this._mapper = mapper;
             this._identityService = identityService;
         }
+        public async Task<PagedList<UserViewModel>> SearchAsync(PaginationParams @params, string name)
+        {
+            var query = _repository.Users.GetAll().Where(x => x.UserName.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<UserViewModel>(x));
+            return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
+        }
+        public async Task<PagedList<UserViewModel>> GetAllAysnc(PaginationParams @params)
+        {
+            var query = _repository.Users.GetAll().OrderBy(x => x.Id)
+                .Select(x => _mapper.Map<UserViewModel>(x));
+            return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
+        }
         public async Task<bool> DeleteAsync(int id)
         {
             var temp = await _repository.Users.FindByIdAsync(id);
@@ -54,19 +65,6 @@ namespace ICollection.Service.Services.Users
             _repository.Users.Update(id, student);
             var result = await _repository.SaveChangesAsync();
             return result > 0;
-        }
-
-        public async Task<PagedList<UserViewModel>> SearchAsync(PaginationParams @params, string name)
-        {
-            var query = _repository.Users.GetAll().Where(x => x.UserName.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<UserViewModel>(x));
-            return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
-        }
-
-        public async Task<PagedList<UserViewModel>> GetAllAysnc(PaginationParams @params)
-        {
-            var query = _repository.Users.GetAll().OrderBy(x => x.Id)
-                .Select(x => _mapper.Map<UserViewModel>(x));
-            return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
         }
 
         public async Task<bool> ImageUpdateAsync(int id, IFormFile file)

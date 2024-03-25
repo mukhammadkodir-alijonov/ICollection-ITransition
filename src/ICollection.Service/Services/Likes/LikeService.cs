@@ -20,30 +20,6 @@ namespace ICollection.Service.Services.Likes
         {
             this._unitOfWork = unitOfWork;
         }
-        public async Task<bool> DislikeCollectionAsync(int collectionId, int userId)
-        {
-            var unlike = _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId && x.UserId == userId);
-            if (unlike != null)
-            {
-                _unitOfWork.Likes.Delete(unlike.Id);
-                return 0 < await _unitOfWork.SaveChangesAsync();
-            }
-            else 
-                throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is not liked");
-        }
-
-        public async Task<bool> DislikeItemAsync(int itemId, int userId)
-        {
-            var unlike = _unitOfWork.Likes.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userId);
-            if (unlike != null)
-            {
-                _unitOfWork.Likes.Delete(unlike.Id);
-                return 0 < await _unitOfWork.SaveChangesAsync();
-            }
-            else 
-                throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is not liked");
-        }
-
         public async Task<bool> LikeCollectionAsync(int collectionId, int userId)
         {
             var likeCollection = await _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId && x.UserId == userId);
@@ -60,7 +36,6 @@ namespace ICollection.Service.Services.Likes
             }
             else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is already liked");
         }
-
         public async Task<bool> LikeItemAsync(int itemId, int userId)
         {
             var likeItem = await _unitOfWork.Likes.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userId);
@@ -76,6 +51,28 @@ namespace ICollection.Service.Services.Likes
                 return await _unitOfWork.SaveChangesAsync() > 0;
             }
             else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is already liked");
+        }
+        public async Task<bool> DislikeCollectionAsync(int collectionId, int userId)
+        {
+            var unlike = _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId && x.UserId == userId);
+            if (unlike != null)
+            {
+                _unitOfWork.Likes.Delete(unlike.Id);
+                return 0 < await _unitOfWork.SaveChangesAsync();
+            }
+            else 
+                throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is not liked");
+        }
+        public async Task<bool> DislikeItemAsync(int itemId, int userId)
+        {
+            var unlike = _unitOfWork.Likes.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userId);
+            if (unlike != null)
+            {
+                _unitOfWork.Likes.Delete(unlike.Id);
+                return 0 < await _unitOfWork.SaveChangesAsync();
+            }
+            else 
+                throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is not liked");
         }
     }
 }

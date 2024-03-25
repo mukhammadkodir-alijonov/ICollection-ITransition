@@ -45,14 +45,14 @@ namespace ICollection.Presentation.Controllers.Collections
             try
             {
                 var success = await _collectionService.CreateCollectionAsync(collectionCreateDto);
-                SetTempMessage(success, "Collection created successfully","Successfull");
+                SetTempMessage(success, "Collection created successfully", "Failed");
                 return View(success);
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"An error occurred while creating the collection: {ex.Message}";
                 // Log the exception
-                return RedirectToAction("Index","Home"); // Redirect to the home page with an error message
+                return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
         [HttpDelete("deletecollection")]
@@ -61,7 +61,7 @@ namespace ICollection.Presentation.Controllers.Collections
             try
             {
                 var success = await _collectionService.DeleteCollectionAsync(id);
-                SetTempMessage(success, "Collection deleted successfully", "Successfully");
+                SetTempMessage(success, "Collection deleted successfully", "Failed");
                 return View(success);
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace ICollection.Presentation.Controllers.Collections
             try
             {
                 var success = await _collectionService.UpdateCollectionAsync(id, collectionUpdateDto);
-                SetTempMessage(success, "Collection updated successfully", "Successfully");
+                SetTempMessage(success, "Collection updated successfully", "Failed");
                 return View(success);
             }
             catch (Exception ex)

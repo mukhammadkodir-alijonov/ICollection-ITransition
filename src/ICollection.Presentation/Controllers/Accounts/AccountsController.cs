@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Accounts
 {
+    [Route("accounts")]
     public class AccountsController : Controller
     {
         private readonly IAccountService _service;
@@ -14,6 +15,25 @@ namespace ICollection.Presentation.Controllers.Accounts
         public AccountsController(IAccountService accountService)
         {
             this._service = accountService;
+        }
+        [HttpGet("adminregister")]
+        public ViewResult AdminRegister() => View("AdminRegister");
+        [HttpPost("adminregister")]
+        public async Task<IActionResult> AdminRegisterAsync(AdminRegisterDto adminRegisterDto)
+        {
+            if (ModelState.IsValid)
+            {
+                bool result = await _service.AdminRegisterAsync(adminRegisterDto);
+                if (result)
+                {
+                    return RedirectToAction("login", "accounts", new { area = "" });
+                }
+                else
+                {
+                    return AdminRegister();
+                }
+            }
+            else return AdminRegister();
         }
         [HttpGet("register")]
         public ViewResult Register() => View("Register");

@@ -33,12 +33,6 @@
   <ItemGroup>
     <Folder Include="Areas\" />
     <Folder Include="Controllers\Admins\" />
-    <Folder Include="Controllers\Comments\" />
-    <Folder Include="Controllers\CustomFields\" />
-    <Folder Include="Controllers\Items\" />
-    <Folder Include="Controllers\Likes\" />
-    <Folder Include="Controllers\Tags\" />
-    <Folder Include="Controllers\Users\" />
   </ItemGroup>
 
 </Project>
