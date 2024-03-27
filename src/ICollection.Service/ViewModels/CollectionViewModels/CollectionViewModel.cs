@@ -1,5 +1,6 @@
 ﻿using ICollection.Domain.Entities.Collections;
 using ICollection.Domain.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
 
         public string Description { get; set; } = String.Empty;
         public Topics Topics { get; set; } = Topics.Other;
+        //public SelectList? Topics { get; set; } = new SelectList(Enum.GetValues(typeof(Topics)));
 
         public string ImagePath { get; set; } = String.Empty;
 
         public DateTime CreatedAt { get; set; } = default!;
         public DateTime LastUpdatedAt { get; set; } = default!;
+        public int LikeCount { get; set; } = default!;
         public int UserId { get; set; }
         public int CustomFieldId { get; set; }
 
@@ -31,7 +34,7 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
                 Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
-                ImagePath = model.ImagePath,
+                ImagePath = model.Image,
                 CreatedAt = model.CreatedAt
             };
         }

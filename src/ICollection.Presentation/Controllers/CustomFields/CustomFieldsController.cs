@@ -17,12 +17,12 @@ namespace ICollection.Presentation.Controllers.CustomFields
         {
             return View();
         }
-        [HttpPost("createcustomfieldforcollection")]
-        public async Task<IActionResult> CreateCustomFieldForCollection(CustomFieldDto customFieldDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(int id, CustomFieldDto customFieldDto)
         {
             try
             {
-                var success = await _customFieldService.CreateCustomFieldForCollectionAsync(customFieldDto);
+                var success = await _customFieldService.CreateCustomFieldAsync(id,customFieldDto);
                 SetTempMessage(success, "CustomField created successfully", "Failed");
                 return View(success);
             }
@@ -33,24 +33,8 @@ namespace ICollection.Presentation.Controllers.CustomFields
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpPost("createcustomfieldforitem")]
-        public async Task<IActionResult> CreateCustomFieldForItem(CustomFieldDto customFieldDto)
-        {
-            try
-            {
-                var success = await _customFieldService.CreateCustomFieldForItemAsync(customFieldDto);
-                SetTempMessage(success, "CustomField created successfully", "Failed");
-                return View(success);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"An error occurred while creating the custom field: {ex.Message}";
-                // Log the exception
-                return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
-            }
-        }
-        [HttpDelete("deletecustomfield")]
-        public async Task<IActionResult> DeleteCustomField(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {

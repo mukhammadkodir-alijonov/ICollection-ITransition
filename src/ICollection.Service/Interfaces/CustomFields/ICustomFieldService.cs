@@ -9,8 +9,7 @@ namespace ICollection.Service.Interfaces.CustomFields
 {
     public interface ICustomFieldService
     {
-        public Task<bool> CreateCustomFieldForCollectionAsync(CustomFieldDto customField);
-        public Task<bool> CreateCustomFieldForItemAsync(CustomFieldDto customField);
+        public Task<bool> CreateCustomFieldAsync(int id,CustomFieldDto customField);
         public Task<bool> DeleteCustomFieldAsync(int id);
     }
 }

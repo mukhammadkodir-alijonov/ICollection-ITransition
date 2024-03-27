@@ -1,7 +1,6 @@
-﻿using ICollection.Domain.Enums;
-using ICollection.Service.Common.Helpers;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ICollection.Domain.Enums;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,17 +10,14 @@ using System.Threading.Tasks;
 
 namespace ICollection.Service.Dtos.Collections
 {
-    public class CollectionDto
+    public class CollectionUpdateDto
     {
-        [Required]
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        [Required]
         public Topics Topics { get; set; } = Topics.Other;
+        public string CustomFields { get; set; } = string.Empty;
         public IFormFile? Image { get; set; }
         public string ImagePath { get; set; } = string.Empty;
-        public string LikeCount { get; set; } = string.Empty;
-        public Dictionary<string, object>? CustomFieldValues { get; set; }
         public int CostomFieldId { get; set; }
     }
 }

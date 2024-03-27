@@ -38,16 +38,16 @@ namespace ICollection.Service.Services.Likes
         }
         public async Task<bool> LikeItemAsync(int itemId, int userId)
         {
-            var likeItem = await _unitOfWork.Likes.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userId);
+            var likeItem = await _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userId);
             if (likeItem == null)
             {
-                var entity = new Like
+                var entity = new LikeItem
                 {
                     UserId = userId,
                     ItemId = itemId,
                     CreatedAt = TimeHelper.GetCurrentServerTime()
                 };
-                var res = _unitOfWork.Likes.Add(entity);
+                var res = _unitOfWork.LikeItem.Add(entity);
                 return await _unitOfWork.SaveChangesAsync() > 0;
             }
             else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is already liked");
@@ -65,7 +65,7 @@ namespace ICollection.Service.Services.Likes
         }
         public async Task<bool> DislikeItemAsync(int itemId, int userId)
         {
-            var unlike = _unitOfWork.Likes.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userId);
+            var unlike = _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userId);
             if (unlike != null)
             {
                 _unitOfWork.Likes.Delete(unlike.Id);

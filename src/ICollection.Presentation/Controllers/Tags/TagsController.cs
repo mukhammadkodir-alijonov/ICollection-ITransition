@@ -17,8 +17,8 @@ namespace ICollection.Presentation.Controllers.Tags
         {
             return View();
         }
-        [HttpPost("createtag")]
-        public async Task<IActionResult> CreateTagAsync(TagDto tagDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(TagDto tagDto)
         {
             try
             {
@@ -39,8 +39,8 @@ namespace ICollection.Presentation.Controllers.Tags
                 return RedirectToAction("Index", "Collection");
             }
         }
-        [HttpDelete("deletetag")]
-        public async Task<IActionResult> DeleteTagAsync(int tagId)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int tagId)
         {
             try
             {

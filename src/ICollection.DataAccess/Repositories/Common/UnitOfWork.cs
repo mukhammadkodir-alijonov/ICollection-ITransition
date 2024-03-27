@@ -20,6 +20,7 @@ namespace ICollection.DataAccess.Repositories.Common
         public IitemRepository Iitems { get; }
 
         public ILikeRepository Likes { get; }
+        public ILikeItemRepository LikeItem { get; }
 
         public ITagRepository Tags { get; }
 
@@ -33,6 +34,7 @@ namespace ICollection.DataAccess.Repositories.Common
             CustomFields = new CustomFieldRepository(_dbContext);
             Iitems = new itemRepository(_dbContext);
             Likes = new LikeRepository(_dbContext);
+            LikeItem = new LikeItemRepository(_dbContext);
             Tags = new TagRepository(_dbContext);
             Users = new UserRepository(_dbContext);
         }

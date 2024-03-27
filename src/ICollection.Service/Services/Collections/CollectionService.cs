@@ -5,9 +5,13 @@ using ICollection.Domain.Entities.Collections;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Common.Utils;
+using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Collections;
 using ICollection.Service.Interfaces.Collections;
+using ICollection.Service.Interfaces.Common;
+using ICollection.Service.Interfaces.Files;
 using ICollection.Service.ViewModels.CollectionViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,11 +23,15 @@ namespace ICollection.Service.Services.Collections
 {
     public class CollectionService : ICollectionService
     {
+        private readonly IFileService _fileService;
+        private readonly IIdentityService _identityService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CollectionService(IUnitOfWork unitOfWork,IMapper mapper)
+        public CollectionService(IUnitOfWork unitOfWork, IMapper mapper,IIdentityService identityService, IFileService fileService)
         {
+            this._fileService = fileService;
+            this._identityService = identityService;
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
         }
@@ -36,7 +44,8 @@ namespace ICollection.Service.Services.Collections
 
         public async Task<bool> CreateCollectionAsync(CollectionDto collectionCreateDto)
         {
-            var collection = await _unitOfWork.Collections.FirstOrDefault(x => x.UserId == collectionCreateDto.UserId);
+            var userid = _identityService.Id ?? 0;
+            var collection = await _unitOfWork.Collections.FirstOrDefault(x => x.UserId == userid);
             if (collection == null)
             {
                 var entity = new Collection
@@ -44,8 +53,8 @@ namespace ICollection.Service.Services.Collections
                     Name = collectionCreateDto.Name,
                     Description = collectionCreateDto.Description,
                     Topics = collectionCreateDto.Topics,
-                    ImagePath = collectionCreateDto.ImagePath,
-                    UserId = collectionCreateDto.UserId,
+                    Image = collectionCreateDto.ImagePath,
+                    UserId = userid,
                     CreatedAt = TimeHelper.GetCurrentServerTime(),
                     LastUpdatedAt = TimeHelper.GetCurrentServerTime()
                 };
@@ -65,7 +74,7 @@ namespace ICollection.Service.Services.Collections
             return result > 0;
         }
 
-        public async Task<bool> UpdateCollectionAsync(int id, CollectionDto collectionUpdateDto)
+        public async Task<bool> UpdateCollectionAsync(int id, CollectionUpdateDto collectionUpdateDto)
         {
             var collection = await _unitOfWork.Collections.FindByIdAsync(id);
             if (collection is null)
@@ -73,11 +82,51 @@ namespace ICollection.Service.Services.Collections
             collection.Name = collectionUpdateDto.Name;
             collection.Description = collectionUpdateDto.Description;
             collection.Topics = collectionUpdateDto.Topics;
-            collection.ImagePath = collectionUpdateDto.ImagePath;
+            collection.Image = collectionUpdateDto.ImagePath;
+            if (collectionUpdateDto.Image is not null)
+            {
+                collection.Image = await _fileService.UploadImageAsync(collectionUpdateDto.Image);
+            }
             collection.LastUpdatedAt = TimeHelper.GetCurrentServerTime();
             _unitOfWork.Collections.Update(id, collection);
             var result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
+        }
+        public async Task<bool> UpdateImageAsync(int id, IFormFile formFile)
+        {
+            var admin = await _unitOfWork.Collections.FindByIdAsync(id);
+            var updateImage = await _fileService.UploadImageAsync(formFile);
+            var collectionUpdateDto = new CollectionUpdateDto()
+            {
+                ImagePath = updateImage
+            };
+            var result = await UpdateCollectionAsync(id, collectionUpdateDto);
+            return result;
+        }
+        public async Task<PagedList<CollectionViewModel>> SearchAsync(PaginationParams @params, string name)
+        {
+            var query = _unitOfWork.Collections.GetAll().Where(x => x.Name.ToLower().StartsWith(name.ToLower()) || x.Description.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<CollectionViewModel>(x));
+            return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
+        }
+
+        public async Task<PagedList<CollectionViewModel>> TopCollection(PaginationParams @params)
+        {
+            var userid = _identityService.Id ?? 0;
+            var query = from collection in _unitOfWork.Collections.GetAll()
+                        let likeCount = _unitOfWork.Likes.GetAll().Where(x => x.CollectionId == collection.Id).Count()
+                        select new CollectionViewModel()
+                        {
+                            Id = collection.Id,
+                            Name = collection.Name,
+                            Description = collection.Description,
+                            Topics = collection.Topics,
+                            ImagePath = collection.Image,
+                            UserId = userid,
+                            CreatedAt = collection.CreatedAt,
+                            LastUpdatedAt = collection.LastUpdatedAt,
+                            LikeCount = likeCount
+                        };
+            return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
     }
 }

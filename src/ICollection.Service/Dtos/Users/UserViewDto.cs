@@ -1,4 +1,5 @@
 ﻿using ICollection.Domain.Common;
+using ICollection.Domain.Entities.Collections;
 using ICollection.Domain.Entities.Users;
 using ICollection.Service.Dtos.Files;
 using System;
@@ -14,12 +15,13 @@ namespace ICollection.Service.Dtos.Users
         public string UserName { get; set; } = String.Empty;
 
         public string ImagePath { get; set; } = String.Empty;
+        public List<Collection>? Collections { get; set; }
 
         public DateTime BirthDate { get; set; }
         
         public DateTime CreatedAt { get; set; }
 
-        public FileModelDto FileModel { get; set; }
+        public FileModelDto? FileModel { get; set; }
 
         public static implicit operator UserViewDto(User user)
         {

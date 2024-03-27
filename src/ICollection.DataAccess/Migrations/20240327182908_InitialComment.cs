@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ICollection.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialComment : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,9 +66,9 @@ namespace ICollection.DataAccess.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Topics = table.Column<byte>(type: "smallint", nullable: false),
-                    ImagePath = table.Column<string>(type: "text", nullable: false),
-                    ItemId = table.Column<int>(type: "integer", nullable: false),
+                    Image = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
+                    LikeId = table.Column<int>(type: "integer", nullable: false),
                     CostomFieldId = table.Column<int>(type: "integer", nullable: false),
                     TagId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -97,7 +97,7 @@ namespace ICollection.DataAccess.Migrations
                     CostomFieldId = table.Column<int>(type: "integer", nullable: false),
                     TagId = table.Column<int>(type: "integer", nullable: false),
                     CommentId = table.Column<int>(type: "integer", nullable: false),
-                    LikeId = table.Column<int>(type: "integer", nullable: false),
+                    LikeItemId = table.Column<int>(type: "integer", nullable: false),
                     CollectionId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -114,6 +114,34 @@ namespace ICollection.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Items_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Likes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CollectionId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Likes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Likes_Collections_CollectionId",
+                        column: x => x.CollectionId,
+                        principalTable: "Collections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Likes_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -157,8 +185,8 @@ namespace ICollection.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<byte>(type: "smallint", nullable: false),
-                    CollectionId = table.Column<int>(type: "integer", nullable: false),
-                    ItemId = table.Column<int>(type: "integer", nullable: false),
+                    CollectionId = table.Column<int>(type: "integer", nullable: true),
+                    ItemId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
@@ -169,45 +197,36 @@ namespace ICollection.DataAccess.Migrations
                         name: "FK_CustomFields_Collections_CollectionId",
                         column: x => x.CollectionId,
                         principalTable: "Collections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CustomFields_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Likes",
+                name: "LikeItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ItemId = table.Column<int>(type: "integer", nullable: false),
-                    CollectionId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Likes", x => x.Id);
+                    table.PrimaryKey("PK_LikeItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Likes_Collections_CollectionId",
-                        column: x => x.CollectionId,
-                        principalTable: "Collections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_Items_ItemId",
+                        name: "FK_LikeItems_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Likes_Users_UserId",
+                        name: "FK_LikeItems_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -277,14 +296,19 @@ namespace ICollection.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LikeItems_ItemId",
+                table: "LikeItems",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LikeItems_UserId",
+                table: "LikeItems",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Likes_CollectionId",
                 table: "Likes",
                 column: "CollectionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Likes_ItemId",
-                table: "Likes",
-                column: "ItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_UserId",
@@ -319,6 +343,9 @@ namespace ICollection.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "CustomFields");
+
+            migrationBuilder.DropTable(
+                name: "LikeItems");
 
             migrationBuilder.DropTable(
                 name: "Likes");

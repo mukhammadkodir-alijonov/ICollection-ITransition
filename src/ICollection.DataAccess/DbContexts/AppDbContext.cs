@@ -23,6 +23,7 @@ namespace ICollection.DataAccess.DbContexts
         public virtual DbSet<CustomField> CustomFields { get; set; } = default!;
         public virtual DbSet<Item> Items { get; set; } = default!;
         public virtual DbSet<Like> Likes { get; set; } = default!;
+        public virtual DbSet<LikeItem> LikeItems { get; set; } = default!;
         public virtual DbSet<Tag> Tags { get; set; } = default!;
         public virtual DbSet<User> Users { get; set; } = default!;
 

@@ -3,10 +3,12 @@ using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Users;
 using ICollection.Service.Interfaces.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Users
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
@@ -21,21 +23,21 @@ namespace ICollection.Presentation.Controllers.Users
         {
             return View();
         }
-        [HttpGet("search")]
+/*        [HttpGet("search")]
         public async Task<IActionResult> SearchAsync(PaginationParams @params, string name)
         {
             try
             {
-                var res = await _userService.SearchAsync(@params, name);
+                var res = await _userService.(@params, name);
                 return View("Index", res);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }
-        [HttpGet("getalluser")]
-        public async Task<IActionResult> GetAllAsync(int page = 1)
+        }*/
+        [HttpGet]
+        public async Task<IActionResult> GetAll(int page = 1)
         {
             try
             {
@@ -51,8 +53,8 @@ namespace ICollection.Presentation.Controllers.Users
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete("deleteuser")]
-        public async Task<IActionResult> DeleteUserAsync(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -73,8 +75,8 @@ namespace ICollection.Presentation.Controllers.Users
                 return RedirectToAction("Index", "User");
             }
         }
-        [HttpDelete("deleteimage")]
-        public async Task<IActionResult> DeleteImageAsync(int id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteImage(int id)
         {
             try
             {
@@ -95,8 +97,8 @@ namespace ICollection.Presentation.Controllers.Users
                 return RedirectToAction("Index", "User");
             }
         }
-        [HttpPut("updateimage")]
-        public async Task<IActionResult> UpdateImageAsync(int id, [FromForm] IFormFile image)
+        [HttpPut]
+        public async Task<IActionResult> UpdateImage(int id, [FromForm] IFormFile image)
         {
             try
             {
@@ -117,8 +119,8 @@ namespace ICollection.Presentation.Controllers.Users
                 return RedirectToAction("Index", "Home");
             }
         }
-        [HttpPut("userupdate")]
-        public async Task<IActionResult> UpdateUserAsync(int id, UserUpdateDto userDto)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(int id, UserUpdateDto userDto)
         {
             try
             {
@@ -139,8 +141,8 @@ namespace ICollection.Presentation.Controllers.Users
                 return RedirectToAction("Index", "Home");
             }
         }
-        [HttpPut("passwordupdate")]
-        public async Task<IActionResult> UpdatePasswordAsync(int id, PasswordUpdateDto password)
+        [HttpPut]
+        public async Task<IActionResult> UpdatePassword(int id, PasswordUpdateDto password)
         {
             try
             {

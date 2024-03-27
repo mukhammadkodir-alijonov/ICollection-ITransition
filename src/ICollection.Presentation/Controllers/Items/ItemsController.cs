@@ -1,10 +1,12 @@
 ﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Items;
 using ICollection.Service.Interfaces.Items;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Items
 {
+    [Authorize]
     public class ItemsController : Controller
     {
         private readonly IitemService _iitemService;
@@ -19,8 +21,8 @@ namespace ICollection.Presentation.Controllers.Items
         {
             return View();
         }
-        [HttpGet("getallitem")]
-        public async Task<IActionResult> GetAllItems(int page = 1)
+        [HttpGet]
+        public async Task<IActionResult> GetAll(int page = 1)
         {
             try
             {
@@ -37,8 +39,8 @@ namespace ICollection.Presentation.Controllers.Items
             }
 
         }
-        [HttpPost("createitem")]
-        public async Task<IActionResult> CreateItem(ItemDto itemDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(ItemDto itemDto)
         {
             try
             {
@@ -53,8 +55,8 @@ namespace ICollection.Presentation.Controllers.Items
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete("deleteitem")]
-        public async Task<IActionResult> DeleteItem(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -69,8 +71,8 @@ namespace ICollection.Presentation.Controllers.Items
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpPut("updateitem")]
-        public async Task<IActionResult> UpdateItem(int id, ItemDto item)
+        [HttpPut]
+        public async Task<IActionResult> Update(int id, ItemDto item)
         {
             try
             {

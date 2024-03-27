@@ -16,15 +16,15 @@ namespace ICollection.Presentation.Controllers.Likes
         {
             return View();
         }
-        [HttpPost("likecollection")]
-        public async Task<IActionResult> LikeCollectionAsync(int collectionId, int userId)
+        [HttpPost]
+        public async Task<IActionResult> LikeCollection(int collectionId, int userId)
         {
             try
             {
                 var res = await _likeService.LikeCollectionAsync(collectionId, userId);
                 if (res)
                 {
-                    return RedirectToAction("Index", "Collection");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -38,8 +38,8 @@ namespace ICollection.Presentation.Controllers.Likes
                 return RedirectToAction("Index", "Collection");
             }
         }
-        [HttpPost("likeitem")]
-        public async Task<IActionResult> LikeItemAsync(int itemId, int userId)
+        [HttpPost]
+        public async Task<IActionResult> LikeItem(int itemId, int userId)
         {
             try
             {
@@ -60,8 +60,8 @@ namespace ICollection.Presentation.Controllers.Likes
                 return RedirectToAction("Index", "Item");
             }
         }
-        [HttpPut("dislikecollection")]
-        public async Task<IActionResult> DislikeCollectionAsync(int collectionId, int userId)
+        [HttpPut]
+        public async Task<IActionResult> DislikeCollection(int collectionId, int userId)
         {
             try
             {
@@ -82,8 +82,8 @@ namespace ICollection.Presentation.Controllers.Likes
                 return RedirectToAction("Index", "Collection");
             }
         }
-        [HttpPut("dislikeitem")]
-        public async Task<IActionResult> DislikeItemAsync(int itemId, int userId)
+        [HttpPut]
+        public async Task<IActionResult> DislikeItem(int itemId, int userId)
         {
             try
             {

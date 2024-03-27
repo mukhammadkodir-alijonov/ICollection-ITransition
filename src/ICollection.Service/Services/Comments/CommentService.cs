@@ -4,6 +4,7 @@ using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Dtos.Comments;
 using ICollection.Service.Interfaces.Comments;
+using ICollection.Service.Interfaces.Common;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -16,21 +17,24 @@ namespace ICollection.Service.Services.Comments
 {
     public class CommentService : ICommentService
     {
+        private readonly IIdentityService _identityService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CommentService(IUnitOfWork unitOfWork)
+        public CommentService(IUnitOfWork unitOfWork,IIdentityService identityService)
         {
+            this._identityService = identityService;
             this._unitOfWork = unitOfWork;
         }
         public async Task<bool> CreateCommentAsync(CommentDto commentDto)
         {
-            var comment = await _unitOfWork.Comments.FirstOrDefault(x => x.UserId == commentDto.UserId);
+            var userid = _identityService.Id ?? 0;
+            var comment = await _unitOfWork.Comments.FirstOrDefault(x => x.UserId == userid);
             if (comment == null)
             {
                 var entity = new Comment
                 {
                     Content = commentDto.CommentText,
-                    UserId = commentDto.UserId,
+                    UserId = userid,
                     ItemId = commentDto.ItemId,
                     CreatedAt = TimeHelper.GetCurrentServerTime()
                 };

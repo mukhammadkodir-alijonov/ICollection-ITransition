@@ -1,11 +1,12 @@
 ﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Collections;
 using ICollection.Service.Interfaces.Collections;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Collections
 {
-    [Route("collections")]
+    [Authorize]
     public class CollectionsController : Controller
     {
         private readonly ICollectionService _collectionService;
@@ -20,9 +21,21 @@ namespace ICollection.Presentation.Controllers.Collections
         {
             return View();
         }
+        public async Task<IActionResult> Searchc(string name,int page = 1)
+        {
+            try
+            {
+                var res = await _collectionService.SearchAsync(new PaginationParams(page, _pageSize),name);
+                return View("/Home/Index",res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        [HttpGet("getall")]
-        public async Task<IActionResult> GetAllCollections(int page = 1)
+        [HttpGet]
+        public async Task<IActionResult> GetAll(int page = 1)
         {
             try
             {
@@ -39,14 +52,14 @@ namespace ICollection.Presentation.Controllers.Collections
             }
 
         }
-        [HttpPost("createcollection")]
-        public async Task<IActionResult> CreateCollection(CollectionDto collectionCreateDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(CollectionDto collectionCreateDto)
         {
             try
             {
                 var success = await _collectionService.CreateCollectionAsync(collectionCreateDto);
                 SetTempMessage(success, "Collection created successfully", "Failed");
-                return View(success);
+                return View("Create", success);
             }
             catch (Exception ex)
             {
@@ -55,14 +68,14 @@ namespace ICollection.Presentation.Controllers.Collections
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete("deletecollection")]
-        public async Task<IActionResult> DeleteCollection(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 var success = await _collectionService.DeleteCollectionAsync(id);
                 SetTempMessage(success, "Collection deleted successfully", "Failed");
-                return View(success);
+                return View("Delete",success);
             }
             catch (Exception ex)
             {
@@ -71,20 +84,33 @@ namespace ICollection.Presentation.Controllers.Collections
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpPatch("updatecollection")]
-        public async Task<IActionResult> UpdateCollection(int id, CollectionDto collectionUpdateDto)
+        [HttpPatch]
+        public async Task<IActionResult> Update(int id, CollectionUpdateDto collectionUpdateDto)
         {
             try
             {
                 var success = await _collectionService.UpdateCollectionAsync(id, collectionUpdateDto);
                 SetTempMessage(success, "Collection updated successfully", "Failed");
-                return View(success);
+                return View("Edit",success);
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"An error occurred while updating the collection: {ex.Message}";
                 // Log the exception
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> TopCollection(int page = 1)
+        {
+            try
+            {
+                var res = await _collectionService.TopCollection(new PaginationParams(page, _pageSize));
+                return View(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         private void SetTempMessage(bool success, string successMessage, string errorMessage)

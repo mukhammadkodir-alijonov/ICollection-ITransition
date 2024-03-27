@@ -10,6 +10,7 @@ namespace ICollection.DataAccess.Interfaces.Common
         public ICustomFieldRepository CustomFields { get; }
         public IitemRepository Iitems { get; }
         public ILikeRepository Likes { get; }
+        public ILikeItemRepository LikeItem { get; }
         public ITagRepository Tags { get; }
         public IUserRepository Users { get; }
         public Task<int> SaveChangesAsync();

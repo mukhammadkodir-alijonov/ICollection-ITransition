@@ -1,10 +1,11 @@
 ﻿using ICollection.Service.Dtos.Comments;
 using ICollection.Service.Interfaces.Comments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Comments
 {
-    [Route("comments")]
+    [Authorize]
     public class CommentsController : Controller
     {
         private readonly ICommentService _commentService;
@@ -18,8 +19,8 @@ namespace ICollection.Presentation.Controllers.Comments
         {
             return View();
         }
-        [HttpPost("createcomment")]
-        public async Task<IActionResult> CreateComment(CommentDto commentDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(CommentDto commentDto)
         {
             try
             {
@@ -34,8 +35,8 @@ namespace ICollection.Presentation.Controllers.Comments
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete("deletecomment")]
-        public async Task<IActionResult> DeleteComment(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {

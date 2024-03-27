@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ICollection.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240325100051_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240327182908_InitialComment")]
+    partial class InitialComment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,15 +95,15 @@ namespace ICollection.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ImagePath")
+                    b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ItemId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("LikeId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -168,13 +168,13 @@ namespace ICollection.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CollectionId")
+                    b.Property<int?>("CollectionId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("ItemId")
+                    b.Property<int?>("ItemId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("LastUpdatedAt")
@@ -227,7 +227,7 @@ namespace ICollection.DataAccess.Migrations
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("LikeId")
+                    b.Property<int>("LikeItemId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -263,6 +263,32 @@ namespace ICollection.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CollectionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("ICollection.Domain.Entities.Likes.LikeItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
@@ -274,13 +300,11 @@ namespace ICollection.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CollectionId");
-
                     b.HasIndex("ItemId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("LikeItems");
                 });
 
             modelBuilder.Entity("ICollection.Domain.Entities.Tags.Tag", b =>
@@ -398,27 +422,19 @@ namespace ICollection.DataAccess.Migrations
 
             modelBuilder.Entity("ICollection.Domain.Entities.CustomFields.CustomField", b =>
                 {
-                    b.HasOne("ICollection.Domain.Entities.Collections.Collection", "Collection")
+                    b.HasOne("ICollection.Domain.Entities.Collections.Collection", null)
                         .WithMany("CustomFields")
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CollectionId");
 
-                    b.HasOne("ICollection.Domain.Entities.Items.Item", "Item")
+                    b.HasOne("ICollection.Domain.Entities.Items.Item", null)
                         .WithMany("CustomFields")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Collection");
-
-                    b.Navigation("Item");
+                        .HasForeignKey("ItemId");
                 });
 
             modelBuilder.Entity("ICollection.Domain.Entities.Items.Item", b =>
                 {
                     b.HasOne("ICollection.Domain.Entities.Collections.Collection", "Collection")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -437,14 +453,8 @@ namespace ICollection.DataAccess.Migrations
             modelBuilder.Entity("ICollection.Domain.Entities.Likes.Like", b =>
                 {
                     b.HasOne("ICollection.Domain.Entities.Collections.Collection", "Collection")
-                        .WithMany()
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ICollection.Domain.Entities.Items.Item", "Item")
                         .WithMany("Likes")
-                        .HasForeignKey("ItemId")
+                        .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -455,6 +465,23 @@ namespace ICollection.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Collection");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ICollection.Domain.Entities.Likes.LikeItem", b =>
+                {
+                    b.HasOne("ICollection.Domain.Entities.Items.Item", "Item")
+                        .WithMany("LikeItem")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ICollection.Domain.Entities.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Item");
 
@@ -472,7 +499,7 @@ namespace ICollection.DataAccess.Migrations
                 {
                     b.Navigation("CustomFields");
 
-                    b.Navigation("Items");
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("ICollection.Domain.Entities.Items.Item", b =>
@@ -481,7 +508,7 @@ namespace ICollection.DataAccess.Migrations
 
                     b.Navigation("CustomFields");
 
-                    b.Navigation("Likes");
+                    b.Navigation("LikeItem");
 
                     b.Navigation("Tag");
                 });
