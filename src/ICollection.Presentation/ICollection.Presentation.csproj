@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\" />
-    <Folder Include="Controllers\Admins\" />
+    <Folder Include="wwwroot\media\images\" />
   </ItemGroup>
 
 </Project>

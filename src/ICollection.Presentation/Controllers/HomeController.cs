@@ -11,18 +11,21 @@ namespace ICollection.Presentation.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHttpContextAccessor _contextAccessor;
         private readonly ICollectionService _collectionService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger,ICollectionService collectionService)
+        public HomeController(ILogger<HomeController> logger,ICollectionService collectionService,IHttpContextAccessor httpContextAccessor)
         {
+            _contextAccessor = httpContextAccessor;
             _collectionService = collectionService;
             _logger = logger;
         }
 
         public async Task<IActionResult> Index()
         {
-            var res = await _collectionService.TopCollection(new PaginationParams(1, 10));
+            ViewBag.UserName = _contextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
+            var res = await _collectionService.TopCollection(new PaginationParams(1, 4));
             return View(res);
         }
 

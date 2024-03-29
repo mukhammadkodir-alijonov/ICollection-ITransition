@@ -1,4 +1,5 @@
-﻿using ICollection.Service.Dtos.Tags;
+﻿using ICollection.Domain.Entities.Items;
+using ICollection.Service.Dtos.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace ICollection.Service.Interfaces.Tags
 {
     public interface ITagService
     {
-        public Task<bool> CreateTagAsync(TagDto tag);
-        public Task<bool> DeleteTagAsync(int id);
+        public Task CreateTagAsync(IEnumerable<string> tags, Item item);
+        public Task UpdateTagAsync(IEnumerable<string> tags, Item itemToUpdate);
     }
 }

@@ -23,6 +23,6 @@ namespace ICollection.Service.Interfaces.Admins
         public Task<bool> UpdateImageAsync(int id, IFormFile from);
         public Task<bool> DeleteImageAsync(int adminId);
         public Task<bool> UpdatePasswordAsync(int id, PasswordUpdateDto dto);
-        //public Task<bool> CreateAdminAsync(AdminRegisterDto adminCreateDto);
+        public Task<bool> CreateAdminAsync(AdminRegisterDto adminCreateDto);
     }
 }

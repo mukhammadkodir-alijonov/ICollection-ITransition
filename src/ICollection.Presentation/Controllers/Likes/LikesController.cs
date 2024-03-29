@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Likes
 {
+    [Route("likes")]
     public class LikesController : Controller
     {
         private readonly ILikeService _likeService;
@@ -11,12 +12,7 @@ namespace ICollection.Presentation.Controllers.Likes
         {
             this._likeService = likeService;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpPost]
+        [HttpPost("likecollection")]
         public async Task<IActionResult> LikeCollection(int collectionId, int userId)
         {
             try
@@ -38,7 +34,7 @@ namespace ICollection.Presentation.Controllers.Likes
                 return RedirectToAction("Index", "Collection");
             }
         }
-        [HttpPost]
+        [HttpPost("likeitem")]
         public async Task<IActionResult> LikeItem(int itemId, int userId)
         {
             try
@@ -60,7 +56,7 @@ namespace ICollection.Presentation.Controllers.Likes
                 return RedirectToAction("Index", "Item");
             }
         }
-        [HttpPut]
+        [HttpPut("dislikecollection")]
         public async Task<IActionResult> DislikeCollection(int collectionId, int userId)
         {
             try
@@ -82,7 +78,7 @@ namespace ICollection.Presentation.Controllers.Likes
                 return RedirectToAction("Index", "Collection");
             }
         }
-        [HttpPut]
+        [HttpPut("dislikeitem")]
         public async Task<IActionResult> DislikeItem(int itemId, int userId)
         {
             try

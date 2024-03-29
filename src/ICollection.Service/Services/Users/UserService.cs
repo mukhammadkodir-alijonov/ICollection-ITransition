@@ -9,6 +9,7 @@ using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Users;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Users;
+using ICollection.Service.ViewModels.CollectionViewModels;
 using ICollection.Service.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -41,12 +42,12 @@ namespace ICollection.Service.Services.Users
             var query = _repository.Users.GetAll().Where(x => x.UserName.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<UserViewModel>(x));
             return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
         }*/
-        public async Task<PagedList<UserViewModel>> GetAllAysnc(PaginationParams @params)
+/*        public async Task<PagedList<UserViewModel>> GetAllAysnc(PaginationParams @params)
         {
             var query = _repository.Users.GetAll().OrderBy(x => x.Id)
                 .Select(x => _mapper.Map<UserViewModel>(x));
             return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
-        }
+        }*/
         public async Task<bool> DeleteAsync(int id)
         {
             var temp = await _repository.Users.FindByIdAsync(id);
@@ -130,6 +131,13 @@ namespace ICollection.Service.Services.Users
                 else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "new password and verify" + " password must be match!");
             }
             else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Invalid Password");
+        }
+        public async Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params)
+        {
+            var userid = _identityService.Id ?? 0;
+            var query = _repository.Collections.GetAll().Where(x=>x.UserId ==userid).OrderBy(x => x.Id)
+                .Select(x => _mapper.Map<CollectionViewModel>(x));
+            return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
     }
 }

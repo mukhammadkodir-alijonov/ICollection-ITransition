@@ -16,16 +16,12 @@ namespace ICollection.Domain.Entities.Items
 
         public int CostomFieldId { get; set; }
         public virtual List<CustomField> CustomFields { get; set; } = default!;
-        //public Dictionary<string, object>? CustomFieldValues { get; set; }
 
         public int TagId { get; set; }
-        public virtual List<Tag> Tag { get; set; } = default!;
+        public virtual List<Tag> Tags { get; set; } = default!;
 
         public int CommentId { get; set; }
         public virtual List<Comment> Comments { get; set; } = default!;
-
-        public int LikeItemId { get; set; }
-        public virtual List<LikeItem> LikeItem { get; set; } = default!;
 
         public int CollectionId { get; set; }
         public virtual Collection Collection { get; set; } = default!;

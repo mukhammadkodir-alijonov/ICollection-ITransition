@@ -7,6 +7,7 @@ using ICollection.Service.Common.Helpers;
 using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Collections;
+using ICollection.Service.Dtos.CustomFields;
 using ICollection.Service.Interfaces.Collections;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Files;
@@ -23,13 +24,15 @@ namespace ICollection.Service.Services.Collections
 {
     public class CollectionService : ICollectionService
     {
+        private readonly IImageService _imageService;
         private readonly IFileService _fileService;
         private readonly IIdentityService _identityService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CollectionService(IUnitOfWork unitOfWork, IMapper mapper,IIdentityService identityService, IFileService fileService)
+        public CollectionService(IUnitOfWork unitOfWork, IMapper mapper, IIdentityService identityService, IFileService fileService, IImageService imageService)
         {
+            this._imageService = imageService;
             this._fileService = fileService;
             this._identityService = identityService;
             this._unitOfWork = unitOfWork;
@@ -45,23 +48,20 @@ namespace ICollection.Service.Services.Collections
         public async Task<bool> CreateCollectionAsync(CollectionDto collectionCreateDto)
         {
             var userid = _identityService.Id ?? 0;
-            var collection = await _unitOfWork.Collections.FirstOrDefault(x => x.UserId == userid);
-            if (collection == null)
+            var imagepath = await _imageService.SaveImageAsync(collectionCreateDto.Image!);
+            var entity = new Collection
             {
-                var entity = new Collection
-                {
-                    Name = collectionCreateDto.Name,
-                    Description = collectionCreateDto.Description,
-                    Topics = collectionCreateDto.Topics,
-                    Image = collectionCreateDto.ImagePath,
-                    UserId = userid,
-                    CreatedAt = TimeHelper.GetCurrentServerTime(),
-                    LastUpdatedAt = TimeHelper.GetCurrentServerTime()
-                };
-                var res = _unitOfWork.Collections.Add(entity);
-                return await _unitOfWork.SaveChangesAsync() > 0;
-            }
-            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is not created or already exists");
+                Name = collectionCreateDto.Name,
+                Description = collectionCreateDto.Description,
+                Topics = collectionCreateDto.Topics,
+                Image = imagepath,
+                UserId = userid,
+                CreatedAt = TimeHelper.GetCurrentServerTime(),
+                LastUpdatedAt = TimeHelper.GetCurrentServerTime()
+            };
+            var res = _unitOfWork.Collections.Add(entity);
+            return await _unitOfWork.SaveChangesAsync() > 0;
+            //else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is not created or already exists");
         }
 
         public async Task<bool> DeleteCollectionAsync(int id)

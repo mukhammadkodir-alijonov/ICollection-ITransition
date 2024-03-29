@@ -1,16 +1,15 @@
 ﻿@using ICollection.Service.ViewModels.CollectionViewModels
 @model List<CollectionViewModel>
-
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <h1>Index</h1>
 
 <p>
-    <a asp-controller="collections" asp-action="createcollection">Create A New Collection</a>
+    <a asp-controller="collections" asp-action="create">Create A New Collection</a>
 </p>
 <form asp-controller="collections" asp-action="search" method="get">
     <p>
-        @*         <select asp-for="Topics">
-        <option value="">All</option>
-        </select> *@
         Title: <input type="text" name="name" />
         <input type="submit" value="Filter" />
     </p>

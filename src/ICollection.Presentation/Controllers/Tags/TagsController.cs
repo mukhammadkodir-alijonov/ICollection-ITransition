@@ -1,9 +1,11 @@
-﻿using ICollection.Service.Dtos.Tags;
+﻿using ICollection.Domain.Entities.Items;
+using ICollection.Service.Dtos.Tags;
 using ICollection.Service.Interfaces.Tags;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Tags
 {
+    [Route("tags")]
     public class TagsController : Controller
     {
         private readonly ITagService _tagService;
@@ -12,26 +14,13 @@ namespace ICollection.Presentation.Controllers.Tags
         {
             this._tagService = tagService;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Create(TagDto tagDto)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(IEnumerable<string> tags, Item item)
         {
             try
             {
-                var res = await _tagService.CreateTagAsync(tagDto);
-                if (res)
-                {
-                    return RedirectToAction("Index", "Collection");
-                }
-                else
-                {
-                    TempData["Error"] = "Failed to like collection";
-                    return RedirectToAction("Index", "Collection");
-                }
+                await _tagService.CreateTagAsync(tags, item);
+                return RedirectToAction("Index", "Collection");
             }
             catch (Exception ex)
             {
@@ -39,21 +28,13 @@ namespace ICollection.Presentation.Controllers.Tags
                 return RedirectToAction("Index", "Collection");
             }
         }
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int tagId)
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(IEnumerable<string> tags, Item item)
         {
             try
             {
-                var res = await _tagService.DeleteTagAsync(tagId);
-                if (res)
-                {
-                    return RedirectToAction("Index", "Collection");
-                }
-                else
-                {
-                    TempData["Error"] = "Failed to like collection";
-                    return RedirectToAction("Index", "Collection");
-                }
+                await _tagService.UpdateTagAsync(tags, item);
+                return RedirectToAction("Index", "Collection");
             }
             catch (Exception ex)
             {

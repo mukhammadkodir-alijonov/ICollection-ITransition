@@ -35,6 +35,7 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
                 Name = model.Name,
                 Description = model.Description,
                 ImagePath = model.Image,
+                Topics = model.Topics,
                 CreatedAt = model.CreatedAt
             };
         }

@@ -1,20 +1,8 @@
 ﻿@using ICollection.Service.ViewModels.CollectionViewModels
 @model List<CollectionViewModel>
-
-<h1>Index</h1>
-
-<p>
-    <a asp-controller="collections" asp-action="createcollection">Create A New Collection</a>
-</p>
-<form asp-controller="collections" asp-action="search" method="get">
-    <p>
-        @*         <select asp-for="Topics">
-        <option value="">All</option>
-        </select> *@
-        Title: <input type="text" name="name" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <table class="table">
     <thead>
         <tr>
@@ -32,7 +20,7 @@
             </th>
         </tr>
     </thead>
-@*     <tbody>
+    <tbody>
         @foreach (var item in Model)
         {
             <tr>
@@ -46,11 +34,11 @@
                     <span class="fw-bold text-gray-500">@item.LikeCount</span>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-controller="items" asp-action="getall" asp-route-id="@item.Id">View Items</a> |
+                    <a asp-controller="collections" asp-action="Update" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="collections" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
-    </tbody> *@
+    </tbody>
 </table>

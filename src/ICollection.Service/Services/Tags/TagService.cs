@@ -1,4 +1,5 @@
 ﻿using ICollection.DataAccess.Interfaces.Common;
+using ICollection.Domain.Entities.Items;
 using ICollection.Domain.Entities.Tags;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Dtos.Tags;
@@ -19,29 +20,29 @@ namespace ICollection.Service.Services.Tags
         {
             this._unitOfWork = unitOfWork;
         }
-        public async Task<bool> CreateTagAsync(TagDto tagDto)
+        public async Task CreateTagAsync(IEnumerable<string> tags, Item item)
         {
-            var tag = await _unitOfWork.Tags.FirstOrDefault(x => x.Id == tagDto.TagId);
-            if (tag == null)
+            item.Tags = new List<Tag>();
+            foreach (var tag in tags)
             {
-                var entity = new Tag
+                if (int.TryParse(tag, out var tagId))
                 {
-                    Name = tagDto.Name,
-                    CollectionId = tagDto.CollectionId
-                };
-                var res = _unitOfWork.Tags.Add(entity);
-                return await _unitOfWork.SaveChangesAsync() > 0;
+                    var dbTag = await _unitOfWork.Tags.FindByIdAsync(tagId);
+                    if (dbTag != null) item.Tags.Add(dbTag);
+                    continue;
+                }
+                item.Tags.Add(new Tag { Name = tag });
             }
-            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Tag is not created");
         }
 
-        public async Task<bool> DeleteTagAsync(int id)
+        public async Task UpdateTagAsync(IEnumerable<string> tags, Item itemToUpdate)
         {
-            var tag = await _unitOfWork.Tags.FindByIdAsync(id);
-            if (tag is null)
-                throw new StatusCodeException(System.Net.HttpStatusCode.NotFound, "Tag not found");
-            _unitOfWork.Tags.Delete(id);
-            return await _unitOfWork.SaveChangesAsync() > 0;
+            if (!tags.Any())
+            {
+                itemToUpdate.Tags = new List<Tag>();
+                return;
+            }
+            await CreateTagAsync(tags, itemToUpdate);
         }
     }
 }

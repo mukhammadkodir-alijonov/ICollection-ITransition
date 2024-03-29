@@ -1,65 +1,67 @@
 ﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Collections;
 using ICollection.Service.Interfaces.Collections;
+using ICollection.Service.Interfaces.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Collections
 {
     [Authorize]
+    [Route("collections")]
     public class CollectionsController : Controller
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserService _userService;
         private readonly ICollectionService _collectionService;
         private readonly int _pageSize = 10;
 
-        public CollectionsController(ICollectionService collectionService)
+        public CollectionsController(ICollectionService collectionService, IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
+            this._httpContextAccessor = httpContextAccessor;
+            this._userService = userService;
             this._collectionService = collectionService;
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
+            var res = await _userService.GetAllCollectionAsync(new PaginationParams(1, _pageSize));
+            return View(res);
         }
-        public async Task<IActionResult> Searchc(string name,int page = 1)
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchAsync(string name, int page = 1)
         {
             try
             {
-                var res = await _collectionService.SearchAsync(new PaginationParams(page, _pageSize),name);
-                return View("/Home/Index",res);
+                var res = await _collectionService.SearchAsync(new PaginationParams(page, _pageSize), name);
+                return View(res);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll(int page = 1)
+        [HttpGet("create")]
+        public IActionResult Create()
         {
-            try
-            {
-                var collections = await _collectionService.GetAllCollectionAsync(new PaginationParams(page, _pageSize));
-                if (collections is null)
-                    return View("Index");
-                return View(collections);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"An error occurred while fetching collections: {ex.Message}";
-                // Log the exception
-                return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
-            }
-
+            return View("Create");
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(CollectionDto collectionCreateDto)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAsync(CollectionDto collectionCreateDto)
         {
             try
             {
                 var success = await _collectionService.CreateCollectionAsync(collectionCreateDto);
                 SetTempMessage(success, "Collection created successfully", "Failed");
-                return View("Create", success);
+                if (success is true)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
+                }
             }
             catch (Exception ex)
             {
@@ -68,14 +70,14 @@ namespace ICollection.Presentation.Controllers.Collections
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 var success = await _collectionService.DeleteCollectionAsync(id);
                 SetTempMessage(success, "Collection deleted successfully", "Failed");
-                return View("Delete",success);
+                return View("Delete", success);
             }
             catch (Exception ex)
             {
@@ -84,14 +86,20 @@ namespace ICollection.Presentation.Controllers.Collections
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpPatch]
-        public async Task<IActionResult> Update(int id, CollectionUpdateDto collectionUpdateDto)
+        [HttpGet("update")]
+        public ActionResult Update(int id)
+        {
+            ViewBag.Id = id;
+            return View("Edit");
+        }
+        [HttpPatch("update")]
+        public async Task<IActionResult> UpdateAsync(int id, CollectionUpdateDto collectionUpdateDto)
         {
             try
             {
                 var success = await _collectionService.UpdateCollectionAsync(id, collectionUpdateDto);
                 SetTempMessage(success, "Collection updated successfully", "Failed");
-                return View("Edit",success);
+                return View("Edit", success);
             }
             catch (Exception ex)
             {
@@ -100,7 +108,7 @@ namespace ICollection.Presentation.Controllers.Collections
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpGet]
+        [HttpGet("gettop")]
         public async Task<IActionResult> TopCollection(int page = 1)
         {
             try

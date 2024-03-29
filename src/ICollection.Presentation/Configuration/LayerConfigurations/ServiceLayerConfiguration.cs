@@ -10,6 +10,7 @@ using ICollection.Service.Interfaces.Files;
 using ICollection.Service.Interfaces.Items;
 using ICollection.Service.Interfaces.Likes;
 using ICollection.Service.Interfaces.Tags;
+using ICollection.Service.Interfaces.Users;
 using ICollection.Service.Services.Accounts;
 using ICollection.Service.Services.Admins;
 using ICollection.Service.Services.Collections;
@@ -20,6 +21,7 @@ using ICollection.Service.Services.Files;
 using ICollection.Service.Services.Items;
 using ICollection.Service.Services.Likes;
 using ICollection.Service.Services.Tags;
+using ICollection.Service.Services.Users;
 
 namespace ICollection.Presentation.Configuration.LayerConfigurations
 {
@@ -40,6 +42,7 @@ namespace ICollection.Presentation.Configuration.LayerConfigurations
             services.AddScoped<IitemService,itemService>();
             services.AddScoped<ILikeService,LikeService>();
             services.AddScoped<ITagService,TagService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddMemoryCache();
             services.AddHttpContextAccessor();

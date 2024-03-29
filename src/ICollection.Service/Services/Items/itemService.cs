@@ -7,6 +7,7 @@ using ICollection.Service.Common.Helpers;
 using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.CustomFields;
 using ICollection.Service.Dtos.Items;
+using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Items;
 using ICollection.Service.ViewModels.CollectionViewModels;
 using ICollection.Service.ViewModels.ItemViewModels;
@@ -22,29 +23,31 @@ namespace ICollection.Service.Services.Items
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IImageService _imageService;
+        private readonly IIdentityService _identityService;
 
-        public itemService(IUnitOfWork unitOfWork,IMapper mapper)
+        public itemService(IUnitOfWork unitOfWork,IMapper mapper,IIdentityService identityService,IImageService imageService)
         {
+            this._imageService = imageService;
+            this._identityService = identityService;
             this._unitOfWork = unitOfWork;
             this._mapper = mapper;
         }
         public async Task<bool> CreateItemAsync(ItemDto itemDto)
         {
-            var item = await _unitOfWork.Iitems.FirstOrDefault(x => x.Id == itemDto.ItemId);
-            if (item == null)
-            {
+            var userid = _identityService.Id ?? 0;
+            var imagepath = await _imageService.SaveImageAsync(itemDto.Image!);
                 var entity = new Item
                 {
                     Name = itemDto.Name,
                     Description = itemDto.Description,
+                    UserId = userid,
+                    ImagePath = imagepath,
                     CollectionId = itemDto.CollectionId
                 };
                 var res = _unitOfWork.Iitems.Add(entity);
                 return await _unitOfWork.SaveChangesAsync() > 0;
-            }
-            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is not created or already exists");
         }
-
         public async Task<bool> DeleteItemAsync(int id)
         {
             var item = await _unitOfWork.Iitems.FindByIdAsync(id);
@@ -54,14 +57,12 @@ namespace ICollection.Service.Services.Items
             var result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
         }
-
-        public async Task<PagedList<ItemViewModel>> GetAllItemAsync(PaginationParams @params)
+        public async Task<PagedList<ItemViewModel>> GetAllItemAsync(int id,PaginationParams @params)
         {
-            var query = _unitOfWork.Iitems.GetAll().OrderBy(x => x.Id)
+            var query = _unitOfWork.Iitems.GetAll().Where(x=>x.CollectionId == id).OrderBy(x => x.Id)
                         .Select(x => _mapper.Map<ItemViewModel>(x));
             return await PagedList<ItemViewModel>.ToPagedListAsync(query, @params);
         }
-
         public async Task<bool> UpdateItemAsync(int id, ItemDto item)
         {
             var entity = await _unitOfWork.Iitems.FindByIdAsync(id);

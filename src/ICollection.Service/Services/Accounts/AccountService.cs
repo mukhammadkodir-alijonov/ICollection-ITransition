@@ -78,7 +78,7 @@ namespace ICollection.Service.Services.Accounts
             {
                 var user = await _repository.Users.FirstOrDefault(x => x.Email == accountLoginDto.Email);
                 if (user is null) throw new NotFoundException(nameof(accountLoginDto.Email), "No user with this email is found!");
-                else
+                if (user.Status != StatusType.Blocked)
                 {
                     var hasherResult = PasswordHasher.Verify(accountLoginDto.Password, user.Salt, user.PasswordHash);
                     if (hasherResult)
@@ -88,6 +88,7 @@ namespace ICollection.Service.Services.Accounts
                     }
                     else throw new NotFoundException(nameof(accountLoginDto.Password), "Incorrect password!");
                 }
+                else throw new NotFoundException(nameof(accountLoginDto.Email), "User is blocked!");
             }
             else
             {

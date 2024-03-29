@@ -19,9 +19,7 @@ namespace ICollection.Service.Dtos.Collections
         [Required]
         public Topics Topics { get; set; } = Topics.Other;
         public IFormFile? Image { get; set; }
-        public string ImagePath { get; set; } = string.Empty;
-        public string LikeCount { get; set; } = string.Empty;
+        public int CustomFieldId { get; set; }
         public Dictionary<string, object>? CustomFieldValues { get; set; }
-        public int CostomFieldId { get; set; }
     }
 }

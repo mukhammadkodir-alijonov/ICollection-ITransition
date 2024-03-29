@@ -12,12 +12,7 @@ namespace ICollection.Presentation.Controllers.CustomFields
         {
             this._customFieldService = customFieldService;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(int id, CustomFieldDto customFieldDto)
         {
             try
@@ -33,7 +28,7 @@ namespace ICollection.Presentation.Controllers.CustomFields
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             try

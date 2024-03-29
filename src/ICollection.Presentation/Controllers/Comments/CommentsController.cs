@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Comments
 {
+    [Route("comments")]
     [Authorize]
     public class CommentsController : Controller
     {
@@ -14,12 +15,7 @@ namespace ICollection.Presentation.Controllers.Comments
         {
             this._commentService = commentService;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CommentDto commentDto)
         {
             try
@@ -35,7 +31,7 @@ namespace ICollection.Presentation.Controllers.Comments
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             try

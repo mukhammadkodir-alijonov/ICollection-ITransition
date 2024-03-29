@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Controllers.Items
 {
+    [Route("items")]
     [Authorize]
     public class ItemsController : Controller
     {
@@ -16,20 +17,16 @@ namespace ICollection.Presentation.Controllers.Items
         {
             this._iitemService = iitemService;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetAll(int page = 1)
+        [HttpGet("getall")]
+        public async Task<IActionResult> GetAll(int id, int page = 1)
         {
             try
             {
-                var items = await _iitemService.GetAllItemAsync(new PaginationParams(page, _pageSize));
+                ViewBag.CollectionId = id;
+                var items = await _iitemService.GetAllItemAsync(id, new PaginationParams(page, _pageSize));
                 if (items is null)
                     return View("Index");
-                return View(items);
+                return View("Index",items);
             }
             catch (Exception ex)
             {
@@ -39,14 +36,19 @@ namespace ICollection.Presentation.Controllers.Items
             }
 
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(ItemDto itemDto)
+        [HttpGet("create")]
+        public IActionResult Create()
+        {
+            return View("Create");
+        }
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAsync(ItemDto itemDto)
         {
             try
             {
                 var success = await _iitemService.CreateItemAsync(itemDto);
                 SetTempMessage(success, "Item created successfully", "Failed");
-                return View(success);
+                return View();
             }
             catch (Exception ex)
             {
@@ -55,7 +57,7 @@ namespace ICollection.Presentation.Controllers.Items
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -71,8 +73,14 @@ namespace ICollection.Presentation.Controllers.Items
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
-        [HttpPut]
-        public async Task<IActionResult> Update(int id, ItemDto item)
+        [HttpGet("update")]
+        public IActionResult Update(int id)
+        {
+            ViewBag.Id = id;
+            return View("Update");
+        }
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateAsync(int id, ItemDto item)
         {
             try
             {

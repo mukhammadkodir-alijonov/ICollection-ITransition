@@ -36,6 +36,22 @@ namespace ICollection.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    ItemId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -70,7 +86,6 @@ namespace ICollection.DataAccess.Migrations
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     LikeId = table.Column<int>(type: "integer", nullable: false),
                     CostomFieldId = table.Column<int>(type: "integer", nullable: false),
-                    TagId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
@@ -97,7 +112,6 @@ namespace ICollection.DataAccess.Migrations
                     CostomFieldId = table.Column<int>(type: "integer", nullable: false),
                     TagId = table.Column<int>(type: "integer", nullable: false),
                     CommentId = table.Column<int>(type: "integer", nullable: false),
-                    LikeItemId = table.Column<int>(type: "integer", nullable: false),
                     CollectionId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -185,7 +199,7 @@ namespace ICollection.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<byte>(type: "smallint", nullable: false),
-                    CollectionId = table.Column<int>(type: "integer", nullable: true),
+                    CollectionId = table.Column<int>(type: "integer", nullable: false),
                     ItemId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
@@ -197,12 +211,37 @@ namespace ICollection.DataAccess.Migrations
                         name: "FK_CustomFields_Collections_CollectionId",
                         column: x => x.CollectionId,
                         principalTable: "Collections",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CustomFields_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemTag",
+                columns: table => new
+                {
+                    ItemsId = table.Column<int>(type: "integer", nullable: false),
+                    TagsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemTag", x => new { x.ItemsId, x.TagsId });
+                    table.ForeignKey(
+                        name: "FK_ItemTag_Items_ItemsId",
+                        column: x => x.ItemsId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ItemTag_Tags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -232,33 +271,6 @@ namespace ICollection.DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    CollectionId = table.Column<int>(type: "integer", nullable: false),
-                    ItemId = table.Column<int>(type: "integer", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tags_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Collections_TagId",
-                table: "Collections",
-                column: "TagId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Collections_UserId",
@@ -296,6 +308,11 @@ namespace ICollection.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ItemTag_TagsId",
+                table: "ItemTag",
+                column: "TagsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LikeItems_ItemId",
                 table: "LikeItems",
                 column: "ItemId");
@@ -314,27 +331,11 @@ namespace ICollection.DataAccess.Migrations
                 name: "IX_Likes_UserId",
                 table: "Likes",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tags_ItemId",
-                table: "Tags",
-                column: "ItemId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Collections_Tags_TagId",
-                table: "Collections",
-                column: "TagId",
-                principalTable: "Tags",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Collections_Tags_TagId",
-                table: "Collections");
-
             migrationBuilder.DropTable(
                 name: "Admins");
 
@@ -343,6 +344,9 @@ namespace ICollection.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "CustomFields");
+
+            migrationBuilder.DropTable(
+                name: "ItemTag");
 
             migrationBuilder.DropTable(
                 name: "LikeItems");

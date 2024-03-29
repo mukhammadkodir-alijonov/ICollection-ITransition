@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ICollection.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240327182908_InitialComment")]
+    [Migration("20240328211603_InitialComment")]
     partial class InitialComment
     {
         /// <inheritdoc />
@@ -109,9 +109,6 @@ namespace ICollection.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TagId")
-                        .HasColumnType("integer");
-
                     b.Property<byte>("Topics")
                         .HasColumnType("smallint");
 
@@ -119,8 +116,6 @@ namespace ICollection.DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TagId");
 
                     b.HasIndex("UserId");
 
@@ -168,7 +163,7 @@ namespace ICollection.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CollectionId")
+                    b.Property<int>("CollectionId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
@@ -226,9 +221,6 @@ namespace ICollection.DataAccess.Migrations
 
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("LikeItemId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -315,13 +307,10 @@ namespace ICollection.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CollectionId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("ItemId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("LastUpdatedAt")
@@ -332,8 +321,6 @@ namespace ICollection.DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
 
                     b.ToTable("Tags");
                 });
@@ -386,12 +373,23 @@ namespace ICollection.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ItemTag", b =>
+                {
+                    b.Property<int>("ItemsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ItemsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("ItemTag");
+                });
+
             modelBuilder.Entity("ICollection.Domain.Entities.Collections.Collection", b =>
                 {
-                    b.HasOne("ICollection.Domain.Entities.Tags.Tag", null)
-                        .WithMany("Collection")
-                        .HasForeignKey("TagId");
-
                     b.HasOne("ICollection.Domain.Entities.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -422,13 +420,17 @@ namespace ICollection.DataAccess.Migrations
 
             modelBuilder.Entity("ICollection.Domain.Entities.CustomFields.CustomField", b =>
                 {
-                    b.HasOne("ICollection.Domain.Entities.Collections.Collection", null)
+                    b.HasOne("ICollection.Domain.Entities.Collections.Collection", "Collection")
                         .WithMany("CustomFields")
-                        .HasForeignKey("CollectionId");
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ICollection.Domain.Entities.Items.Item", null)
                         .WithMany("CustomFields")
                         .HasForeignKey("ItemId");
+
+                    b.Navigation("Collection");
                 });
 
             modelBuilder.Entity("ICollection.Domain.Entities.Items.Item", b =>
@@ -472,7 +474,7 @@ namespace ICollection.DataAccess.Migrations
             modelBuilder.Entity("ICollection.Domain.Entities.Likes.LikeItem", b =>
                 {
                     b.HasOne("ICollection.Domain.Entities.Items.Item", "Item")
-                        .WithMany("LikeItem")
+                        .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -488,11 +490,19 @@ namespace ICollection.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ICollection.Domain.Entities.Tags.Tag", b =>
+            modelBuilder.Entity("ItemTag", b =>
                 {
                     b.HasOne("ICollection.Domain.Entities.Items.Item", null)
-                        .WithMany("Tag")
-                        .HasForeignKey("ItemId");
+                        .WithMany()
+                        .HasForeignKey("ItemsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ICollection.Domain.Entities.Tags.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ICollection.Domain.Entities.Collections.Collection", b =>
@@ -507,15 +517,6 @@ namespace ICollection.DataAccess.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("CustomFields");
-
-                    b.Navigation("LikeItem");
-
-                    b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("ICollection.Domain.Entities.Tags.Tag", b =>
-                {
-                    b.Navigation("Collection");
                 });
 #pragma warning restore 612, 618
         }

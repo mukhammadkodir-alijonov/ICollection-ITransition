@@ -1,4 +1,5 @@
-﻿using ICollection.DataAccess.Interfaces.Common;
+﻿using AutoMapper;
+using ICollection.DataAccess.Interfaces.Common;
 using ICollection.Domain.Entities.Admins;
 using ICollection.Domain.Enums;
 using ICollection.Service.Common.Exceptions;
@@ -10,6 +11,7 @@ using ICollection.Service.Interfaces.Admins;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Files;
 using ICollection.Service.ViewModels.AdminViewModels;
+using ICollection.Service.ViewModels.CollectionViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,12 +24,14 @@ namespace ICollection.Service.Services.Admins
 {
     public class AdminService : IAdminService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IIdentityService _identityService;
         private readonly IFileService _fileService;
 
-        public AdminService(IUnitOfWork unitOfWork, IIdentityService identityService, IFileService fileService)
+        public AdminService(IUnitOfWork unitOfWork, IIdentityService identityService, IFileService fileService,IMapper mapper)
         {
+            this._mapper = mapper;
             this._unitOfWork = unitOfWork;
             this._identityService = identityService;
             this._fileService = fileService;
@@ -105,15 +109,8 @@ namespace ICollection.Service.Services.Admins
         }
         public async Task<PagedList<AdminViewModel>> GetAllAsync(PaginationParams @params)
         {
-            var query = from admin in _unitOfWork.Admins.GetAll().OrderByDescending(x => x.CreatedAt)
-                        select new AdminViewModel()
-                        {
-                            Id = admin.Id,
-                            UserName = admin.UserName,
-                            ImagePath = admin.Image,
-                            BirthDate = admin.BirthDate,
-                            Address = admin.Address
-                        };
+            var query = _unitOfWork.Admins.GetAll().OrderBy(x => x.Id)
+                .Select(x => _mapper.Map<AdminViewModel>(x));
             return await PagedList<AdminViewModel>.ToPagedListAsync(query, @params);
         }
         public async Task<bool> UpdateAsync(int id, AdminUpdateDto adminUpdateDto)
@@ -170,6 +167,20 @@ namespace ICollection.Service.Services.Admins
                 else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "new password and verify" + " password must be match!");
             }
             else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Invalid Password");
+        }
+        //pls make a new method that will name as CreateAdminAsync
+        public async Task<bool> CreateAdminAsync(AdminRegisterDto dto)
+        {
+            var admin = _mapper.Map<Admin>(dto);
+            var hash = PasswordHasher.Hash(dto.Password);
+            admin.PasswordHash = hash.Hash;
+            admin.Salt = hash.Salt;
+            admin.CreatedAt = TimeHelper.GetCurrentServerTime();
+            admin.LastUpdatedAt = TimeHelper.GetCurrentServerTime();
+            admin.Status = StatusType.Active;
+            _unitOfWork.Admins.Add(admin);
+            var result = await _unitOfWork.SaveChangesAsync();
+            return result > 0;
         }
     }
 }

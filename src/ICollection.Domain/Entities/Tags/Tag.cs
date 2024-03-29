@@ -1,5 +1,6 @@
 ﻿using ICollection.Domain.Common;
 using ICollection.Domain.Entities.Collections;
+using ICollection.Domain.Entities.Items;
 
 namespace ICollection.Domain.Entities.Tags
 {
@@ -7,7 +8,7 @@ namespace ICollection.Domain.Entities.Tags
     {
         public string Name { get; set; } = string.Empty;
 
-        public int CollectionId { get; set; }
-        public virtual List<Collection> Collection { get; set; } = default!;
+        public int ItemId { get; set; }
+        public virtual List<Item> Items { get; set; } = default!;
     }
 }
