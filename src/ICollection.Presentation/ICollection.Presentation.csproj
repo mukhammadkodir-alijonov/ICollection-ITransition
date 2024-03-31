@@ -30,9 +30,4 @@
     <ProjectReference Include="..\ICollection.Service\ICollection.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="wwwroot\media\images\" />
-  </ItemGroup>
-
 </Project>

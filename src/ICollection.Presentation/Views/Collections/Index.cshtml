@@ -10,10 +10,19 @@
                 CollectionName
             </th>
             <th>
+                Image
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
                 Topics
             </th>
             <th>
                 LikeCount
+            </th>
+            <th>
+                Like
             </th>
             <th>
                 Action
@@ -28,17 +37,65 @@
                     <span class="fw-bold px-sm-0 text-gray-500">@item.Name</span>
                 </td>
                 <td class="text-start">
+                    @if (item.ImagePath is null)
+                    {
+                        <img src="~/media/images/new-collection.jpg" alt="Image" style="width: 80px; height: 80px;" />
+                    }
+                    <img src="~/@item.ImagePath" alt="Image" style="width: 80px; height: 80px;" />
+                </td>
+                <td class="text-start">
+                    <span class="fw-bold px-sm-0 text-gray-500">@item.Description</span>
+                </td>
+                <td class="text-start">
                     <span class="fw-bold text-gray-500">@item.Topics</span>
                 </td>
                 <td class="text-start">
                     <span class="fw-bold text-gray-500">@item.LikeCount</span>
                 </td>
                 <td>
-                    <a asp-controller="items" asp-action="getall" asp-route-id="@item.Id">View Items</a> |
-                    <a asp-controller="collections" asp-action="Update" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="collections" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-controller="collections" asp-action="likecollection" asp-route-id="@item.Id">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon src="https://cdn.lordicon.com/ulnswmkk.json"
+                                   trigger="hover"
+                                   style="width:40px;height:40px">
+                        </lord-icon>
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="items" asp-action="getall" asp-route-id="@item.Id">View Items</a> -
+                    <a asp-controller="collections" asp-action="update" asp-route-id="@item.Id">Edit</a> -
+                    <form asp-controller="collections" asp-action="delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this collection?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+        .button-container .btn {
+            flex: 1;
+            margin: 0 50px;
+        }
+
+    .btn-yellow {
+        background-color: #FFD700;
+        color: white;
+    }
+
+    .btn-green {
+        background-color: #008000;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #FF0000;
+        color: white;
+    }
+</style>

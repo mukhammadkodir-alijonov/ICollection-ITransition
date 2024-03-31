@@ -26,7 +26,7 @@ namespace ICollection.Service.Services.Items
         private readonly IImageService _imageService;
         private readonly IIdentityService _identityService;
 
-        public itemService(IUnitOfWork unitOfWork,IMapper mapper,IIdentityService identityService,IImageService imageService)
+        public itemService(IUnitOfWork unitOfWork, IMapper mapper, IIdentityService identityService, IImageService imageService)
         {
             this._imageService = imageService;
             this._identityService = identityService;
@@ -37,16 +37,16 @@ namespace ICollection.Service.Services.Items
         {
             var userid = _identityService.Id ?? 0;
             var imagepath = await _imageService.SaveImageAsync(itemDto.Image!);
-                var entity = new Item
-                {
-                    Name = itemDto.Name,
-                    Description = itemDto.Description,
-                    UserId = userid,
-                    ImagePath = imagepath,
-                    CollectionId = itemDto.CollectionId
-                };
-                var res = _unitOfWork.Iitems.Add(entity);
-                return await _unitOfWork.SaveChangesAsync() > 0;
+            var entity = new Item
+            {
+                Name = itemDto.Name,
+                Description = itemDto.Description,
+                UserId = userid,
+                ImagePath = imagepath,
+                CollectionId = itemDto.CollectionId
+            };
+            var res = _unitOfWork.Iitems.Add(entity);
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
         public async Task<bool> DeleteItemAsync(int id)
         {
@@ -57,9 +57,9 @@ namespace ICollection.Service.Services.Items
             var result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
         }
-        public async Task<PagedList<ItemViewModel>> GetAllItemAsync(int id,PaginationParams @params)
+        public async Task<PagedList<ItemViewModel>> GetAllItemAsync(int id, PaginationParams @params)
         {
-            var query = _unitOfWork.Iitems.GetAll().Where(x=>x.CollectionId == id).OrderBy(x => x.Id)
+            var query = _unitOfWork.Iitems.GetAll().Where(x => x.CollectionId == id).OrderBy(x => x.Id)
                         .Select(x => _mapper.Map<ItemViewModel>(x));
             return await PagedList<ItemViewModel>.ToPagedListAsync(query, @params);
         }
@@ -72,7 +72,7 @@ namespace ICollection.Service.Services.Items
             entity.Description = item.Description;
             entity.CollectionId = item.CollectionId;
             entity.LastUpdatedAt = TimeHelper.GetCurrentServerTime();
-            _unitOfWork.Iitems.Update(id,entity);
+            _unitOfWork.Iitems.Update(id, entity);
             var result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
         }

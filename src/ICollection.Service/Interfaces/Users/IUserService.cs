@@ -1,7 +1,9 @@
 ﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Users;
+using ICollection.Service.ViewModels.AdminViewModels;
 using ICollection.Service.ViewModels.CollectionViewModels;
+using ICollection.Service.ViewModels.ItemViewModels;
 using ICollection.Service.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -23,5 +25,7 @@ namespace ICollection.Service.Interfaces.Users
         public Task<bool> ImageUpdateAsync(int id, IFormFile file);
         public Task<bool> UpdatePasswordAsync(int id, PasswordUpdateDto dto);
         public Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params);
+        public Task<PagedList<ItemViewModel>> GetAllItemAsync(int id,PaginationParams @params);
+        public Task<PagedList<UserViewModel>> GetAllAsync(PaginationParams @params);
     }
 }

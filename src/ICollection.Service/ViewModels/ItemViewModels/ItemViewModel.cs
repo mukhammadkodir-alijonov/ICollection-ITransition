@@ -13,6 +13,7 @@ namespace ICollection.Service.ViewModels.ItemViewModels
         public string ImagePath { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;
         public int LikeCount { get; set; }
+        public int CollectionId { get; set; }
         public int CommentCount { get; set; }
         public Dictionary<string, object>? CustomFieldValues { get; set; }
         public DateTime CreatedAt { get; set; } = default!;

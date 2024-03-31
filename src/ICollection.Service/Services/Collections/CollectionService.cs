@@ -82,7 +82,7 @@ namespace ICollection.Service.Services.Collections
             collection.Name = collectionUpdateDto.Name;
             collection.Description = collectionUpdateDto.Description;
             collection.Topics = collectionUpdateDto.Topics;
-            collection.Image = collectionUpdateDto.ImagePath;
+            collection.Image = String.IsNullOrEmpty(collectionUpdateDto.ImagePath) ? collection.Image : collectionUpdateDto.ImagePath;
             if (collectionUpdateDto.Image is not null)
             {
                 collection.Image = await _fileService.UploadImageAsync(collectionUpdateDto.Image);

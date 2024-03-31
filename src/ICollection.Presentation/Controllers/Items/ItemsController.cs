@@ -1,6 +1,9 @@
-﻿using ICollection.Service.Common.Utils;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Items;
 using ICollection.Service.Interfaces.Items;
+using ICollection.Service.Interfaces.Likes;
+using ICollection.Service.Interfaces.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,16 +15,28 @@ namespace ICollection.Presentation.Controllers.Items
     {
         private readonly IitemService _iitemService;
         private readonly int _pageSize = 10;
+        private readonly ILikeService _likeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserService _userService;
 
-        public ItemsController(IitemService iitemService)
+        public ItemsController(IitemService iitemService,IHttpContextAccessor httpContextAccessor,IUserService userService,ILikeService likeService)
         {
+            this._likeService = likeService;
+            this._httpContextAccessor = httpContextAccessor;
+            this._userService = userService;
             this._iitemService = iitemService;
+        }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
         }
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll(int id, int page = 1)
         {
             try
             {
+                ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
                 ViewBag.CollectionId = id;
                 var items = await _iitemService.GetAllItemAsync(id, new PaginationParams(page, _pageSize));
                 if (items is null)
@@ -37,8 +52,9 @@ namespace ICollection.Presentation.Controllers.Items
 
         }
         [HttpGet("create")]
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            ViewBag.Id = id;
             return View("Create");
         }
         [HttpPost("create")]
@@ -58,7 +74,7 @@ namespace ICollection.Presentation.Controllers.Items
             }
         }
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             try
             {
@@ -93,6 +109,50 @@ namespace ICollection.Presentation.Controllers.Items
                 TempData["ErrorMessage"] = $"An error occurred while updating the item: {ex.Message}";
                 // Log the exception
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
+            }
+        }
+        [HttpPost("likeitem")]
+        public async Task<IActionResult> LikeItem(int itemId)
+        {
+            try
+            {
+                var res = await _likeService.LikeItemAsync(itemId);
+                if (res)
+                {
+                    return RedirectToAction("Index", "Items");
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to like item";
+                    return RedirectToAction("Index", "Items");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Items");
+            }
+        }
+        [HttpPut("dislikeitem")]
+        public async Task<IActionResult> DislikeItem(int itemId)
+        {
+            try
+            {
+                var res = await _likeService.DislikeItemAsync(itemId);
+                if (res)
+                {
+                    return RedirectToAction("Index", "Item");
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to dislike item";
+                    return RedirectToAction("Index", "Item");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Item");
             }
         }
         private void SetTempMessage(bool success, string successMessage, string errorMessage)

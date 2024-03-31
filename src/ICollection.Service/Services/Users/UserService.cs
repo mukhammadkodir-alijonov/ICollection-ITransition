@@ -9,7 +9,9 @@ using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Users;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Users;
+using ICollection.Service.ViewModels.AdminViewModels;
 using ICollection.Service.ViewModels.CollectionViewModels;
+using ICollection.Service.ViewModels.ItemViewModels;
 using ICollection.Service.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -37,17 +39,17 @@ namespace ICollection.Service.Services.Users
             this._mapper = mapper;
             this._identityService = identityService;
         }
-/*        public async Task<PagedList<UserViewModel>> SearchAsync(PaginationParams @params, string name)
-        {
-            var query = _repository.Users.GetAll().Where(x => x.UserName.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<UserViewModel>(x));
-            return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
-        }*/
-/*        public async Task<PagedList<UserViewModel>> GetAllAysnc(PaginationParams @params)
-        {
-            var query = _repository.Users.GetAll().OrderBy(x => x.Id)
-                .Select(x => _mapper.Map<UserViewModel>(x));
-            return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
-        }*/
+        /*        public async Task<PagedList<UserViewModel>> SearchAsync(PaginationParams @params, string name)
+                {
+                    var query = _repository.Users.GetAll().Where(x => x.UserName.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<UserViewModel>(x));
+                    return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
+                }*/
+        /*        public async Task<PagedList<UserViewModel>> GetAllAysnc(PaginationParams @params)
+                {
+                    var query = _repository.Users.GetAll().OrderBy(x => x.Id)
+                        .Select(x => _mapper.Map<UserViewModel>(x));
+                    return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
+                }*/
         public async Task<bool> DeleteAsync(int id)
         {
             var temp = await _repository.Users.FindByIdAsync(id);
@@ -135,9 +137,24 @@ namespace ICollection.Service.Services.Users
         public async Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params)
         {
             var userid = _identityService.Id ?? 0;
-            var query = _repository.Collections.GetAll().Where(x=>x.UserId ==userid).OrderBy(x => x.Id)
+            var query = _repository.Collections.GetAll().Where(x => x.UserId == userid).OrderBy(x => x.Id)
                 .Select(x => _mapper.Map<CollectionViewModel>(x));
             return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
+        }
+
+        public async Task<PagedList<ItemViewModel>> GetAllItemAsync(int id, PaginationParams @params)
+        {
+            var userid = _identityService.Id ?? 0;
+            var query = _repository.Iitems.GetAll().Where(x => x.UserId == userid && x.CollectionId == id).OrderBy(x => x.Id)
+                .Select(x => _mapper.Map<ItemViewModel>(x));
+            return await PagedList<ItemViewModel>.ToPagedListAsync(query, @params);
+        }
+
+        public async Task<PagedList<UserViewModel>> GetAllAsync(PaginationParams @params)
+        {
+            var query = _repository.Users.GetAll().OrderBy(x => x.Id)
+                        .Select(x => _mapper.Map<UserViewModel>(x));
+            return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
         }
     }
 }

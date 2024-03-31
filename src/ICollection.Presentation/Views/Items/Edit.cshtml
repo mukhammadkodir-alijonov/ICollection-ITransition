@@ -1,5 +1,5 @@
-﻿@using ICollection.Service.Dtos.Collections
-@model CollectionUpdateDto
+﻿@using ICollection.Service.Dtos.Items
+@model ItemUpdateDto
 @{
     ViewData["Title"] = "Edit";
 }
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-controller="collections" asp-action="update" asp-route-id="@ViewBag.Id" method="post" enctype="multipart/form-data">
+        <form asp-controller="items" asp-action="update" asp-route-id="@ViewBag.Id" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -23,22 +23,8 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Topics" class="control-label"></label>
-                <select asp-for="Topics">
-                    <option value="1">Books</option>
-                    <option value="2">Favorites</option>
-                    <option value="3">Stamps</option>
-                    <option value="4">Whiskeys</option>
-                    <option value="5">Toys</option>
-                    <option value="6">Cars</option>
-                    <option value="7">Antiques</option>
-                    <option value="8">Other</option>
-                </select>
-                <span asp-validation-for="Topics" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" type="file" />
+                <input asp-for="Image" class="form-control" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">

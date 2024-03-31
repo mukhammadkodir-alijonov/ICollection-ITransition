@@ -1,9 +1,69 @@
-﻿@{
+﻿@using ICollection.Service.ViewModels.ItemViewModels
+@model List<ItemViewModel>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <p>
-    <a asp-controller="items" asp-route-id="@ViewBag.CollectionId" asp-action="create">Create A New Collection</a>
+    <a asp-controller="items" asp-route-collectionId="@Model.FirstOrDefault()?.CollectionId" asp-action="create">Create A New Item</a>
 </p>
-<h1>
-    salom
-</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ItemName
+            </th>
+            <th>
+                Image
+            <th>
+                Description
+            </th>
+            </th>
+            <th>
+                LikeCount
+            </th>
+            <th>
+                Like
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-start">
+                    <span class="fw-bold px-sm-0 text-gray-500">@item.Name</span>
+                </td>
+                <td class="text-start">
+                    @if (item.ImagePath is null)
+                    {
+                        <img src="~/media/images/new-collection.jpg" alt="Image" style="width: 80px; height: 80px;" />
+                    }
+                    <img src="~/@item.ImagePath" alt="Image" style="width: 80px; height: 80px;" />
+                </td>
+                <td class="text-start">
+                    <span class="fw-bold text-gray-500">@item.Description</span>
+                </td>
+                <td class="text-start">
+                    <span class="fw-bold text-gray-500">@item.LikeCount</span>
+                </td>
+                <td>
+                    <a asp-controller="items" asp-action="likeitem" asp-route-id="@item.Id">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon src="https://cdn.lordicon.com/ulnswmkk.json"
+                                   trigger="hover"
+                                   style="width:40px;height:40px">
+                        </lord-icon>
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="items" asp-action="Update" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="items" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

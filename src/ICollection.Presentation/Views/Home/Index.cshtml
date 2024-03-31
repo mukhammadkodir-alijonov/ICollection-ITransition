@@ -3,8 +3,6 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Index</h1>
-
 <p>
     <a asp-controller="collections" asp-action="create">Create A New Collection</a>
 </p>
@@ -21,6 +19,9 @@
                 CollectionName
             </th>
             <th>
+                Image
+            </th>
+            <th>
                 Topics
             </th>
             <th>
@@ -28,6 +29,12 @@
             </th>
             <th>
                 LikeCount
+            </th>
+            <th>
+                Like
+            </th>
+            <th>
+                Action
             </th>
         </tr>
     </thead>
@@ -39,6 +46,13 @@
                     <span class="fw-bold px-sm-0 text-gray-500">@item.Name</span>
                 </td>
                 <td class="text-start">
+                    @if (item.ImagePath is null)
+                    {
+                        <img src="~/media/images/new-collection.jpg" alt="Image" style="width: 80px; height: 80px;" />
+                    }
+                    <img src="~/@item.ImagePath" alt="Image" style="width: 80px; height: 80px;" />
+                </td>
+                <td class="text-start">
                     <span class="fw-bold text-gray-500">@item.Topics</span>
                 </td>
                 <td class="text-start">
@@ -46,6 +60,18 @@
                 </td>
                 <td class="text-start">
                     <span class="fw-bold text-gray-500">@item.LikeCount</span>
+                </td>
+                <td>
+                    <a asp-controller="collections" asp-action="likecollection" asp-route-id="@item.Id">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon src="https://cdn.lordicon.com/ulnswmkk.json"
+                                   trigger="hover"
+                                   style="width:40px;height:40px">
+                        </lord-icon>
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="items" asp-action="getall" asp-route-id="@item.Id">View Items</a>
                 </td>
             </tr>
         }

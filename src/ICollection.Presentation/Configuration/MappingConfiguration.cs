@@ -5,6 +5,7 @@ using ICollection.Domain.Entities.Users;
 using ICollection.Service.Dtos.Accounts;
 using ICollection.Service.Dtos.Admins;
 using ICollection.Service.ViewModels.ItemViewModels;
+using ICollection.Service.ViewModels.UserViewModels;
 
 namespace ICollection.Presentation.Configuration
 {
@@ -15,6 +16,7 @@ namespace ICollection.Presentation.Configuration
             CreateMap<AdminRegisterDto, Admin>().ReverseMap();
             CreateMap<AccountRegisterDto, User>().ReverseMap();
             CreateMap<ItemViewModel,Item>().ReverseMap();
+            CreateMap<UserViewModel,User>().ReverseMap();
         }
     }
 }

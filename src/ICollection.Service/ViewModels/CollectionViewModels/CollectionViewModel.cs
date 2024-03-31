@@ -17,7 +17,6 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
 
         public string Description { get; set; } = String.Empty;
         public Topics Topics { get; set; } = Topics.Other;
-        //public SelectList? Topics { get; set; } = new SelectList(Enum.GetValues(typeof(Topics)));
 
         public string ImagePath { get; set; } = String.Empty;
 

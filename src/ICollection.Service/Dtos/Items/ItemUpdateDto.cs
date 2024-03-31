@@ -1,7 +1,4 @@
-﻿using ICollection.Domain.Enums;
-using ICollection.Service.Common.Helpers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,18 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICollection.Service.Dtos.Collections
+namespace ICollection.Service.Dtos.Items
 {
-    public class CollectionDto
+    public class ItemUpdateDto
     {
         public int Id { get; set; }
         [Required]
         public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
         [Required]
-        public Topics Topics { get; set; } = Topics.Other;
+        public string Description { get; set; } = string.Empty;
         public IFormFile? Image { get; set; }
-        public int CustomFieldId { get; set; }
         public Dictionary<string, object>? CustomFieldValues { get; set; }
     }
 }
