@@ -3,23 +3,55 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<p>
-    <a asp-controller="collections" asp-action="create">Create A New Collection</a>
-</p>
+<style>
+    .user-info {
+        text-align: right;
+        padding: 10px;
+    }
+
+        .user-info a {
+            margin-left: 10px;
+        }
+
+    .user-registry-container {
+        margin-top: 20px;
+    }
+
+    .user-registry {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .user-registry caption {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .user-registry th, .user-registry td {
+            border: 1px solid #FF204E;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .user-registry th {
+            background-color: #FF204E;
+        }
+</style>
 <form asp-controller="collections" asp-action="search" method="get">
     <p>
         Title: <input type="text" name="name" />
         <input type="submit" value="Filter" />
     </p>
 </form>
-<table class="table">
+<table class="table" class="user-registry">
     <thead>
         <tr>
             <th>
-                CollectionName
+                Image
             </th>
             <th>
-                Image
+                CollectionName
             </th>
             <th>
                 Topics
@@ -43,14 +75,14 @@
         {
             <tr>
                 <td class="text-start">
-                    <span class="fw-bold px-sm-0 text-gray-500">@item.Name</span>
-                </td>
-                <td class="text-start">
                     @if (item.ImagePath is null)
                     {
                         <img src="~/media/images/new-collection.jpg" alt="Image" style="width: 80px; height: 80px;" />
                     }
                     <img src="~/@item.ImagePath" alt="Image" style="width: 80px; height: 80px;" />
+                </td>
+                <td class="text-start">
+                    <span class="fw-bold px-sm-0 text-gray-500">@item.Name</span>
                 </td>
                 <td class="text-start">
                     <span class="fw-bold text-gray-500">@item.Topics</span>
@@ -62,16 +94,29 @@
                     <span class="fw-bold text-gray-500">@item.LikeCount</span>
                 </td>
                 <td>
-                    <a asp-controller="collections" asp-action="likecollection" asp-route-id="@item.Id">
-                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
-                        <lord-icon src="https://cdn.lordicon.com/ulnswmkk.json"
-                                   trigger="hover"
-                                   style="width:40px;height:40px">
-                        </lord-icon>
+                    <a asp-controller="collections" asp-action="dislikecollection" asp-route-collectionId="@item.Id">
+                        <img src="~/media/images/heart.svg" alt="Image" style="width: 40px; height: 40px;" />
                     </a>
+                    <a asp-controller="collections" asp-action="likecollection" asp-route-collectionId="@item.Id">
+                        <img src="~/media/images/heart-solid.svg" alt="Image" style="width: 40px; height: 40px;" />
+                    </a>
+                    @*                     @{
+                if (item.isLiked == true)
+                {
+                <a asp-controller="collections" asp-action="dislikecollection" asp-route-collectionId="@item.Id">
+                <img src="~/media/images/heart-solid.svg" alt="Image" style="width: 40px; height: 40px;" />
+                </a>
+                }
+                else
+                {
+                <a asp-controller="collections" asp-action="likecollection" asp-route-collectionId="@item.Id">
+                <img src="~/media/images/heart.svg" alt="Image" style="width: 40px; height: 40px;" />
+                </a>
+                }
+                } *@
                 </td>
                 <td>
-                    <a asp-controller="items" asp-action="getall" asp-route-id="@item.Id">View Items</a>
+                    <a asp-controller="items" asp-action="Index" asp-route-id="@item.Id">View Items</a>
                 </td>
             </tr>
         }

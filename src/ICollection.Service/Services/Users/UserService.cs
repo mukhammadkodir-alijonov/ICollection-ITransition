@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using ICollection.DataAccess.Interfaces.Common;
 using ICollection.DataAccess.Repositories.Common;
 using ICollection.Service.Common.Exceptions;
@@ -11,9 +12,11 @@ using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Users;
 using ICollection.Service.ViewModels.AdminViewModels;
 using ICollection.Service.ViewModels.CollectionViewModels;
+using ICollection.Service.ViewModels.CommentViewModels;
 using ICollection.Service.ViewModels.ItemViewModels;
 using ICollection.Service.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,17 +42,6 @@ namespace ICollection.Service.Services.Users
             this._mapper = mapper;
             this._identityService = identityService;
         }
-        /*        public async Task<PagedList<UserViewModel>> SearchAsync(PaginationParams @params, string name)
-                {
-                    var query = _repository.Users.GetAll().Where(x => x.UserName.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<UserViewModel>(x));
-                    return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
-                }*/
-        /*        public async Task<PagedList<UserViewModel>> GetAllAysnc(PaginationParams @params)
-                {
-                    var query = _repository.Users.GetAll().OrderBy(x => x.Id)
-                        .Select(x => _mapper.Map<UserViewModel>(x));
-                    return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
-                }*/
         public async Task<bool> DeleteAsync(int id)
         {
             var temp = await _repository.Users.FindByIdAsync(id);
@@ -137,16 +129,45 @@ namespace ICollection.Service.Services.Users
         public async Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params)
         {
             var userid = _identityService.Id ?? 0;
-            var query = _repository.Collections.GetAll().Where(x => x.UserId == userid).OrderBy(x => x.Id)
-                .Select(x => _mapper.Map<CollectionViewModel>(x));
+            //var query = _repository.Collections.GetAll().Where(x => x.UserId == userid).OrderBy(x => x.Id)
+            //    .Select(x => _mapper.Map<CollectionViewModel>(x));
+            var query = (from item in _repository.Collections.GetAll()
+                         .Where(x => x.UserId == userid).OrderBy(x => x.Id)
+                         let isLiked = _repository.Likes.GetAll().Any(x => x.UserId == userid)
+                         let likeCount = _repository.Likes.GetAll().Count()
+                         orderby likeCount descending
+                         select new CollectionViewModel
+                         {
+                             Id = item.Id,
+                             Name = item.Name,
+                             Description = item.Description,
+                             ImagePath = item.Image,
+                             LikeCount = likeCount,
+                             UserId = userid,
+                             isLiked = isLiked != null
+                         });
             return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
 
         public async Task<PagedList<ItemViewModel>> GetAllItemAsync(int id, PaginationParams @params)
         {
             var userid = _identityService.Id ?? 0;
-            var query = _repository.Iitems.GetAll().Where(x => x.UserId == userid && x.CollectionId == id).OrderBy(x => x.Id)
-                .Select(x => _mapper.Map<ItemViewModel>(x));
+            var query = (from item in _repository.Iitems.GetAll()
+                        .Where(x => x.UserId == userid && x.CollectionId == id).OrderBy(x => x.Id)
+                         let isLiked = _repository.LikeItem.GetAll().Any(x => x.UserId == userid && x.ItemId == item.Id)
+                         let likeCount = _repository.LikeItem.GetAll().Where(x => x.ItemId == item.Id).Count()
+                         orderby likeCount descending
+                         select new ItemViewModel
+                         {
+                             Id = item.Id,
+                             Name = item.Name,
+                             Description = item.Description,
+                             ImagePath = item.Image,
+                             LikeCount = likeCount,
+                             CollectionId = item.CollectionId,
+                             UserId = userid,
+                             IsLiked = isLiked != null
+                         });
             return await PagedList<ItemViewModel>.ToPagedListAsync(query, @params);
         }
 
@@ -155,6 +176,33 @@ namespace ICollection.Service.Services.Users
             var query = _repository.Users.GetAll().OrderBy(x => x.Id)
                         .Select(x => _mapper.Map<UserViewModel>(x));
             return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
+        }
+        public async Task<CollectionViewModel> GetCollectionById(int id)
+        {
+            //var userid = _identityService.Id ?? 0;
+            var res = await _repository.Collections.FindByIdAsync(id);
+            if (res is null)
+                throw new StatusCodeException(HttpStatusCode.NotFound, "Collection not found");
+            /*if (res.UserId != userid)
+                throw new StatusCodeException(HttpStatusCode.Forbidden, "You are not authorized to access this collection");*/
+            var temp = (CollectionViewModel)res;
+            return temp;
+        }
+
+        public async Task<ItemViewModel> GetItemById(int id)
+        {
+            var res = await _repository.Iitems.FindByIdAsync(id);
+            if (res is null)
+                throw new StatusCodeException(HttpStatusCode.NotFound, "Item not found");
+            var temp = _mapper.Map<ItemViewModel>(res);
+            return temp;
+        }
+        public async Task<PagedList<CommentViewModel>> GetAllComments(int id, PaginationParams @params)
+        {
+            var userid = _identityService.Id ?? 0;
+            var query = _repository.Comments.GetAll().Where(x => x.UserId == userid && x.ItemId == id).OrderBy(x => x.Id)
+                .Select(x => _mapper.Map<CommentViewModel>(x));
+            return await PagedList<CommentViewModel>.ToPagedListAsync(query, @params);
         }
     }
 }

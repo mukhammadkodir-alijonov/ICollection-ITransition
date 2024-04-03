@@ -100,28 +100,22 @@ namespace ICollection.Service.Services.Admins
             }
         }
 
-        public async Task<List<UserViewModel>> GetAllAsync(string search)
-        {
-            var query = _unitOfWork.Users.GetAll();
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(x => x.UserName.ToLower().StartsWith(search.ToLower()));
-            }
+        /*        public async Task<List<UserViewModel>> GetAllAsync(string search)
+                {
+                    var query = _unitOfWork.Users.GetAll();
+                    if (!string.IsNullOrEmpty(search))
+                    {
+                        query = query.Where(x => x.UserName.ToLower().StartsWith(search.ToLower()));
+                    }
 
-            var result = await query.OrderByDescending(x => x.CreatedAt).Select(x => (UserViewModel)x).ToListAsync();
-            return result;
-        }
+                    var result = await query.OrderByDescending(x => x.CreatedAt).Select(x => (UserViewModel)x).ToListAsync();
+                    return result;
+                }*/
 
         public async Task<PagedList<UserViewModel>> GetAllAsync(PaginationParams @params)
         {
-            var query = from admin in _unitOfWork.Admins.GetAll().OrderByDescending(x => x.CreatedAt)
-                        select new UserViewModel()
-                        {
-                            Id = admin.Id,
-                            UserName = admin.UserName,
-                            ImagePath = admin.Image,
-                            BirthDate = admin.BirthDate
-                        };
+            var query = _unitOfWork.Admins.GetAll().OrderBy(x => x.Id)
+                        .Select(x => _mapper.Map<UserViewModel>(x));
             return await PagedList<UserViewModel>.ToPagedListAsync(query, @params);
         }
 

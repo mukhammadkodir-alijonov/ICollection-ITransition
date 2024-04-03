@@ -212,7 +212,7 @@ namespace ICollection.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ImagePath")
+                    b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("text");
 

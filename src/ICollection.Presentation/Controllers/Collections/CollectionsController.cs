@@ -3,6 +3,7 @@ using ICollection.Service.Dtos.Collections;
 using ICollection.Service.Interfaces.Collections;
 using ICollection.Service.Interfaces.Likes;
 using ICollection.Service.Interfaces.Users;
+using ICollection.Service.ViewModels.CollectionViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace ICollection.Presentation.Controllers.Collections
         private readonly ICollectionService _collectionService;
         private readonly int _pageSize = 10;
 
-        public CollectionsController(ICollectionService collectionService, IUserService userService, IHttpContextAccessor httpContextAccessor,ILikeService likeService)
+        public CollectionsController(ICollectionService collectionService, IUserService userService, IHttpContextAccessor httpContextAccessor, ILikeService likeService)
         {
             this._likeService = likeService;
             this._httpContextAccessor = httpContextAccessor;
@@ -31,19 +32,22 @@ namespace ICollection.Presentation.Controllers.Collections
             var res = await _userService.GetAllCollectionAsync(new PaginationParams(1, _pageSize));
             return View(res);
         }
+        
         [HttpGet("search")]
         public async Task<IActionResult> SearchAsync(string name, int page = 1)
         {
             try
             {
+                ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
                 var res = await _collectionService.SearchAsync(new PaginationParams(page, _pageSize), name);
-                return View(res);
+                return View("Index",res);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize]
         [HttpGet("create")]
         public IActionResult Create()
         {
@@ -54,6 +58,7 @@ namespace ICollection.Presentation.Controllers.Collections
         [HttpPost("create")]
         public async Task<IActionResult> CreateAsync(CollectionDto collectionCreateDto)
         {
+            ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             try
             {
                 var success = await _collectionService.CreateCollectionAsync(collectionCreateDto);
@@ -83,7 +88,7 @@ namespace ICollection.Presentation.Controllers.Collections
             {
                 var success = await _collectionService.DeleteCollectionAsync(id);
                 SetTempMessage(success, "Collection deleted successfully", "Failed");
-                return RedirectToAction("Index","Collections");
+                return RedirectToAction("Index", "Collections");
             }
             catch (Exception ex)
             {
@@ -92,6 +97,7 @@ namespace ICollection.Presentation.Controllers.Collections
                 return RedirectToAction("Index", "Home"); // Redirect to the home page with an error message
             }
         }
+        [Authorize]
         [HttpGet("update")]
         public ActionResult Update(int id)
         {
@@ -102,6 +108,7 @@ namespace ICollection.Presentation.Controllers.Collections
         [HttpPost("update")]
         public async Task<IActionResult> UpdateAsync(int id, CollectionUpdateDto collectionUpdateDto)
         {
+            ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             try
             {
                 var success = await _collectionService.UpdateCollectionAsync(id, collectionUpdateDto);
@@ -135,7 +142,8 @@ namespace ICollection.Presentation.Controllers.Collections
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("likecollection")]
+        [Authorize]
+        [HttpGet("likecollection")]
         public async Task<IActionResult> LikeCollection(int collectionId)
         {
             try
@@ -143,21 +151,22 @@ namespace ICollection.Presentation.Controllers.Collections
                 var res = await _likeService.LikeCollectionAsync(collectionId);
                 if (res)
                 {
-                    return View();
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
                     TempData["Error"] = "Failed to like collection";
-                    return RedirectToAction("Index", "collections");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", "collections");
+                return RedirectToAction("Index", "Home");
             }
         }
-        [HttpPut("dislikecollection")]
+        [Authorize]
+        [HttpGet("dislikecollection")]
         public async Task<IActionResult> DislikeCollection(int collectionId)
         {
             try
@@ -165,18 +174,18 @@ namespace ICollection.Presentation.Controllers.Collections
                 var res = await _likeService.DislikeCollectionAsync(collectionId);
                 if (res)
                 {
-                    return RedirectToAction("Index", "Collection");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
                     TempData["Error"] = "Failed to dislike collection";
-                    return RedirectToAction("Index", "Collection");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", "Collection");
+                return RedirectToAction("Index", "Home");
             }
         }
         private void SetTempMessage(bool success, string successMessage, string errorMessage)

@@ -16,6 +16,8 @@ namespace ICollection.Service.Dtos.Items
         [Required]
         public string Description { get; set; } = string.Empty;
         public IFormFile? Image { get; set; }
+        public string ImagePath { get; set; } = string.Empty;
         public Dictionary<string, object>? CustomFieldValues { get; set; }
+        public int CollectionId { get; set; }
     }
 }

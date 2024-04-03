@@ -20,5 +20,6 @@ namespace ICollection.Service.Interfaces.Collections
         public Task<bool> CreateCollectionAsync(CollectionDto collectionCreateDto);
         public Task<bool> DeleteCollectionAsync(int id);
         public Task<bool> UpdateCollectionAsync(int id, CollectionUpdateDto collectionUpdateDto);
+        public Task<bool> GetCollectionById(int userId,int collectionId);
     }
 }

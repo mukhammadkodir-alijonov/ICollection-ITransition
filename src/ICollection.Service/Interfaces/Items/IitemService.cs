@@ -15,7 +15,7 @@ namespace ICollection.Service.Interfaces.Items
         public Task<PagedList<ItemViewModel>> GetAllItemAsync(int id, PaginationParams @params);
         //public Task<List<LikePerItemViewModel>> GetAllLikeByItemAsync(int collectionId);
         public Task<bool> CreateItemAsync(ItemDto item);
-        public Task<bool> UpdateItemAsync(int id,ItemDto item);
+        public Task<bool> UpdateItemAsync(int id,ItemUpdateDto item);
         public Task<bool> DeleteItemAsync(int id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using ICollection.Domain.Entities.Collections;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ICollection.Domain.Entities.Collections;
 using ICollection.Domain.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -23,6 +24,7 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
         public DateTime CreatedAt { get; set; } = default!;
         public DateTime LastUpdatedAt { get; set; } = default!;
         public int LikeCount { get; set; } = default!;
+        public bool isLiked { get; set; }
         public int UserId { get; set; }
         public int CustomFieldId { get; set; }
 
@@ -32,10 +34,11 @@ namespace ICollection.Service.ViewModels.CollectionViewModels
             {
                 Id = model.Id,
                 Name = model.Name,
-                Description = model.Description,
                 ImagePath = model.Image,
+                Description = model.Description,
                 Topics = model.Topics,
-                CreatedAt = model.CreatedAt
+                CreatedAt = model.CreatedAt,
+                LastUpdatedAt = model.LastUpdatedAt,
             };
         }
     }

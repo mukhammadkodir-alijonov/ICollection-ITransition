@@ -7,7 +7,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-controller="items" asp-action="create" asp-route-id="@ViewBag.Id" method="post">
+        <form asp-controller="items" asp-action="create" asp-route-collectionId="@ViewBag.collectionId" method="post" enctype="multipart/form-data">
             <div>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">

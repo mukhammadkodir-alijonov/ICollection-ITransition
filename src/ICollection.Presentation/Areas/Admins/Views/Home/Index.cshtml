@@ -1,0 +1,115 @@
+﻿@using ICollection.Service.ViewModels.AdminViewModels
+@model List<AdminViewModel>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Control</title>
+    <style>
+        /* Add your CSS styles here */
+        .user-info {
+        text-align: right;
+        padding: 10px;
+        }
+
+        .user-info a {
+        margin-left: 10px;
+        }
+
+        .user-registry-container {
+        margin-top: 20px;
+        }
+
+        .user-registry {
+        width: 100%;
+        border-collapse: collapse;
+        }
+
+        .user-registry caption {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        }
+
+        .user-registry th, .user-registry td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        }
+
+        .user-registry th {
+        background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <section id="main">
+        <div class="user-info">
+            <span>Hello, <b>@ViewBag.UserName</b></span>
+            <a asp-controller="accounts" asp-action="logout">
+                 Log Out
+            </a>
+        </div>
+        <!--user information table-->
+        <h4>User Control</h4>
+        <div class="user-registry-container">
+            @{
+                var blockForm = Html.BeginForm("Delete", "Admins", FormMethod.Post);
+                var activeForm = Html.BeginForm("Block", "Admins", FormMethod.Post);
+                var deleteForm = Html.BeginForm("Active", "Admins", FormMethod.Post);
+                if (deleteForm != null || activeForm != null || blockForm != null)
+                        {
+                    <div class="block-user">
+                        <input asp-controller="Admins" asp-action="Delete" type="submit" value="block Selected" />
+                        <input asp-controller="Admins" asp-action="Block" type="submit" value="unblock Selected" />
+                        <input asp-controller="Admins" asp-action="Active" type="submit" value="delete Selected" />
+                    </div>
+                    <table class="user-registry">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>id</th>
+                                <th>UserName</th>
+                                <th>B-De-Mail</th>
+                                <th>e-Mail</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr class="tr-shadow text-dark">
+                                    <td class="text-start px-sm-1">
+                                        <input class="fw-bold" type="checkbox" name="ids" id="ids" value="@user.Id" />
+                                    </td>
+                                    <td class="text-start px-sm-1">
+                                        <span class="fw-bold">@user.Id</span>
+                                    </td>
+                                    <td class="text-start">
+                                        <span class="fw-bold px-sm-0 text-gray-500">@user.UserName</span>
+                                    </td>
+                                    <td class="text-start">
+                                        <span class="fw-bold text-gray-500">@user.BirthDate</span>
+                                    </td>
+                                    <td class="text-start">
+                                        <span class="fw-bold px-sm-0 text-gray-500">@user.Email</span>
+                                    </td>
+                                    <td class="text-start">
+                                        <span class="fw-bold text-gray-500">@user.Statustype</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+        </div>
+    </section>
+    <!--footer-->
+    <footer>
+        <!--copy right-->
+    </footer>
+</body>
+</html>

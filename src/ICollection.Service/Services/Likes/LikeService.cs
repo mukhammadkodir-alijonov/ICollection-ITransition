@@ -64,10 +64,13 @@ namespace ICollection.Service.Services.Likes
             if (unlike != null)
             {
                 _unitOfWork.Likes.Delete(unlike.Id);
-                return 0 < await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync(); 
+                return true; 
             }
-            else 
+            else
+            {
                 throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is not liked");
+            }
         }
         public async Task<bool> DislikeItemAsync(int itemId)
         {
@@ -75,7 +78,7 @@ namespace ICollection.Service.Services.Likes
             var unlike = _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userid);
             if (unlike != null)
             {
-                _unitOfWork.Likes.Delete(unlike.Id);
+                _unitOfWork.LikeItem.Delete(unlike.Id);
                 return 0 < await _unitOfWork.SaveChangesAsync();
             }
             else 

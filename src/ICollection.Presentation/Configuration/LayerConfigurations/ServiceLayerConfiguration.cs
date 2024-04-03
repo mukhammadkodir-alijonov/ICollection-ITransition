@@ -31,6 +31,7 @@ namespace ICollection.Presentation.Configuration.LayerConfigurations
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAdminUserService,AdminUserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IImageService, ImageService>();

@@ -10,13 +10,11 @@ namespace ICollection.Presentation.Areas.Admins.Controllers
     public class HomeController : BaseController
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUserService _userService;
         private readonly IAdminService _adminService;
         private readonly IUnitOfWork _unitOfWork;
         public readonly int _pageSize = 10;
-        public HomeController(IAdminService adminService, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUserService userService)
+        public HomeController(IAdminService adminService, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
-            this._userService = userService;
             this._httpContextAccessor = httpContextAccessor;
             this._adminService = adminService;
             this._unitOfWork = unitOfWork;
@@ -25,8 +23,8 @@ namespace ICollection.Presentation.Areas.Admins.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
-            var res = await _userService.GetAllAsync(new PaginationParams(1, _pageSize));
-            return View(res);
+            var res = await _adminService.GetAllAsync(new PaginationParams(1, _pageSize));
+            return View("Index",res);
         }
         [HttpDelete("admins/delete")]
         public async Task<IActionResult> Delete(List<int> ids)

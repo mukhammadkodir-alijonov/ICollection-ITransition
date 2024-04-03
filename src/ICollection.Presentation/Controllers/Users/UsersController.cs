@@ -19,6 +19,11 @@ namespace ICollection.Presentation.Controllers.Users
         {
             this._userService = userService;
         }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {

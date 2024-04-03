@@ -20,7 +20,7 @@ namespace ICollection.Service.ViewModels.UserViewModels
         public Role UserRole { get; set; } = Role.User;
         public DateTime BirthDate { get; set; } = default!;
         public DateTime CreatedAt { get; set; } = default!;
-        public static implicit operator UserViewModel(User model)
+/*        public static implicit operator UserViewModel(User model)
         {
             return new UserViewModel()
             {
@@ -33,6 +33,6 @@ namespace ICollection.Service.ViewModels.UserViewModels
                 BirthDate = model.BirthDate,
                 CreatedAt = model.CreatedAt
             };
-        }
+        }*/
     }
 }

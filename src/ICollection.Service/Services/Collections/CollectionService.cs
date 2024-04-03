@@ -61,7 +61,6 @@ namespace ICollection.Service.Services.Collections
             };
             var res = _unitOfWork.Collections.Add(entity);
             return await _unitOfWork.SaveChangesAsync() > 0;
-            //else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is not created or already exists");
         }
 
         public async Task<bool> DeleteCollectionAsync(int id)
@@ -105,15 +104,32 @@ namespace ICollection.Service.Services.Collections
         }
         public async Task<PagedList<CollectionViewModel>> SearchAsync(PaginationParams @params, string name)
         {
-            var query = _unitOfWork.Collections.GetAll().Where(x => x.Name.ToLower().StartsWith(name.ToLower()) || x.Description.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<CollectionViewModel>(x));
+            //var query = _unitOfWork.Collections.GetAll().Where(x => x.Name.ToLower().StartsWith(name.ToLower()) || x.Description.ToLower().StartsWith(name.ToLower())).OrderByDescending(x => x.CreatedAt).Select(x => _mapper.Map<CollectionViewModel>(x));
+            //return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
+            var query = from collection in _unitOfWork.Collections.GetAll()
+                        where collection.Name.ToLower().StartsWith(name.ToLower()) || collection.Description.ToLower().StartsWith(name.ToLower())
+                        let likeCount = _unitOfWork.Likes.GetAll().Where(x => x.CollectionId == collection.Id).Count()
+                        orderby likeCount descending
+                        select new CollectionViewModel()
+                        {
+                            Id = collection.Id,
+                            Name = collection.Name,
+                            Description = collection.Description,
+                            Topics = collection.Topics,
+                            ImagePath = collection.Image,
+                            UserId = collection.UserId,
+                            CreatedAt = collection.CreatedAt,
+                            LastUpdatedAt = collection.LastUpdatedAt,
+                            LikeCount = likeCount
+                        };
             return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
-
         public async Task<PagedList<CollectionViewModel>> TopCollection(PaginationParams @params)
         {
             var userid = _identityService.Id ?? 0;
             var query = from collection in _unitOfWork.Collections.GetAll()
                         let likeCount = _unitOfWork.Likes.GetAll().Where(x => x.CollectionId == collection.Id).Count()
+                        orderby likeCount descending
                         select new CollectionViewModel()
                         {
                             Id = collection.Id,
@@ -127,6 +143,13 @@ namespace ICollection.Service.Services.Collections
                             LikeCount = likeCount
                         };
             return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
+        }
+        public async Task<bool> GetCollectionById(int userId,int collectionId)
+        {
+            var res = await _unitOfWork.Collections.FindByIdAsync(collectionId);
+            if (res is null)
+                throw new StatusCodeException(System.Net.HttpStatusCode.NotFound, "Collection not found");
+            return res.UserId == userId;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace ICollection.Service.Interfaces.Admins
         public Task<bool> BlockAsync(List<int> ids);
         public Task<bool> ActiveAsync(List<int> ids);
         public Task<bool> DeleteAsync(List<int> ids);
-        public Task<List<UserViewModel>> GetAllAsync(string search);
+        //public Task<List<UserViewModel>> GetAllAsync(string search);
         public Task<PagedList<UserViewModel>> GetAllAsync(PaginationParams @params);
         //public Task<PagedList<UserViewModel>> GetByNameAsync(PaginationParams @params, string name);
         public Task<bool> UpdateAsync(int id, UserUpdateDto userUpdateDto);

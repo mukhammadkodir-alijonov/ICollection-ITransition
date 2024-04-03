@@ -20,7 +20,7 @@ namespace ICollection.Service.Services.Comments
         private readonly IIdentityService _identityService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CommentService(IUnitOfWork unitOfWork,IIdentityService identityService)
+        public CommentService(IUnitOfWork unitOfWork, IIdentityService identityService)
         {
             this._identityService = identityService;
             this._unitOfWork = unitOfWork;
@@ -28,20 +28,15 @@ namespace ICollection.Service.Services.Comments
         public async Task<bool> CreateCommentAsync(CommentDto commentDto)
         {
             var userid = _identityService.Id ?? 0;
-            var comment = await _unitOfWork.Comments.FirstOrDefault(x => x.UserId == userid);
-            if (comment == null)
+            var entity = new Comment
             {
-                var entity = new Comment
-                {
-                    Content = commentDto.CommentText,
-                    UserId = userid,
-                    ItemId = commentDto.ItemId,
-                    CreatedAt = TimeHelper.GetCurrentServerTime()
-                };
-                var res = _unitOfWork.Comments.Add(entity);
-                return await _unitOfWork.SaveChangesAsync() > 0;
-            }
-            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Comment is not created or already exists");
+                Content = commentDto.CommentText,
+                UserId = userid,
+                ItemId = commentDto.ItemId,
+                CreatedAt = TimeHelper.GetCurrentServerTime()
+            };
+            var res = _unitOfWork.Comments.Add(entity);
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteCommentAsync(int id)
@@ -57,10 +52,16 @@ namespace ICollection.Service.Services.Comments
             {
                 throw new StatusCodeException(HttpStatusCode.NotFound, "Tweet not found");
             }
-
-            _unitOfWork.Comments.Delete(id); // Pass the ID of the tweet to delete
-            var result = await _unitOfWork.SaveChangesAsync();
-            return result > 0;
+            var userid = _identityService.Id ?? 0;
+            var userinitem = await _unitOfWork.Comments.FindByIdAsync(id);
+            if (userid == userinitem?.UserId)
+            {
+                _unitOfWork.Comments.Delete(id); // Pass the ID of the tweet to delete
+                var result = await _unitOfWork.SaveChangesAsync();
+                return result > 0;
+            }
+            else
+                throw new StatusCodeException(HttpStatusCode.BadRequest, "You are not authorized to delete this comment");
         }
     }
 }
