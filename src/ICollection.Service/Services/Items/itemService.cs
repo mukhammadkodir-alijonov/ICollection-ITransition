@@ -1,24 +1,15 @@
 ﻿using AutoMapper;
 using ICollection.DataAccess.Interfaces.Common;
-using ICollection.Domain.Entities.CustomFields;
 using ICollection.Domain.Entities.Items;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Common.Utils;
-using ICollection.Service.Dtos.Collections;
-using ICollection.Service.Dtos.CustomFields;
 using ICollection.Service.Dtos.Items;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Files;
 using ICollection.Service.Interfaces.Items;
-using ICollection.Service.ViewModels.CollectionViewModels;
 using ICollection.Service.ViewModels.ItemViewModels;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Items
 {
@@ -42,7 +33,7 @@ namespace ICollection.Service.Services.Items
         {
             var userid = _identityService.Id ?? 0;
             var userincollection = await _unitOfWork.Collections.FindByIdAsync(itemDto.CollectionId);
-            if(userid == userincollection?.UserId)
+            if (userid == userincollection?.UserId)
             {
                 var imagepath = await _imageService.SaveImageAsync(itemDto.Image!);
                 var entity = new Item
@@ -78,12 +69,9 @@ namespace ICollection.Service.Services.Items
         }
         public async Task<PagedList<ItemViewModel>> GetAllItemAsync(int id, PaginationParams @params)
         {
-            //var query = _unitOfWork.Iitems.GetAll().Where(x => x.CollectionId == id).OrderBy(x => x.Id)
-            //            .Select(x => _mapper.Map<ItemViewModel>(x));
-            //return await PagedList<ItemViewModel>.ToPagedListAsync(query, @params);
             var query = (from item in _unitOfWork.Iitems.GetAll()
-                        .Where(x =>x.CollectionId == id).OrderBy(x => x.Id)
-                         let isLiked = _unitOfWork.LikeItem.GetAll().Any(x=>x.ItemId == item.Id)
+                        .Where(x => x.CollectionId == id).OrderBy(x => x.Id)
+                         let isLiked = _unitOfWork.LikeItem.GetAll().Any(x => x.ItemId == item.Id)
                          let likeCount = _unitOfWork.LikeItem.GetAll().Where(x => x.ItemId == item.Id).Count()
                          orderby likeCount descending
                          select new ItemViewModel
@@ -100,15 +88,6 @@ namespace ICollection.Service.Services.Items
         }
         public async Task<bool> UpdateItemAsync(int id, ItemUpdateDto item)
         {
-            //var entity = await _unitOfWork.Iitems.FindByIdAsync(id);
-            //if (entity is null)
-            //    throw new StatusCodeException(System.Net.HttpStatusCode.NotFound, "Item not found");
-            //entity.Name = item.Name;
-            //entity.Description = item.Description;
-            //entity.LastUpdatedAt = TimeHelper.GetCurrentServerTime();
-            //_unitOfWork.Iitems.Update(id, entity);
-            //var result = await _unitOfWork.SaveChangesAsync();
-            //return result > 0;
             var userid = _identityService.Id ?? 0;
             var userinitem = await _unitOfWork.Iitems.FindByIdAsync(id);
             if (userid == userinitem?.UserId)

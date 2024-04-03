@@ -1,24 +1,14 @@
 ﻿using AutoMapper;
 using ICollection.DataAccess.Interfaces.Common;
-using ICollection.Domain.Entities.Admins;
 using ICollection.Domain.Enums;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Common.Utils;
-using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Users;
 using ICollection.Service.Interfaces.Admins;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Files;
-using ICollection.Service.ViewModels.AdminViewModels;
 using ICollection.Service.ViewModels.UserViewModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Admins
 {

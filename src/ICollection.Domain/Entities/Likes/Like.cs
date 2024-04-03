@@ -1,6 +1,5 @@
 ﻿using ICollection.Domain.Common;
 using ICollection.Domain.Entities.Collections;
-using ICollection.Domain.Entities.Items;
 using ICollection.Domain.Entities.Users;
 
 namespace ICollection.Domain.Entities.Likes

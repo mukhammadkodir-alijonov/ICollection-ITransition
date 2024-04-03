@@ -1,24 +1,15 @@
 ﻿using AutoMapper;
 using ICollection.DataAccess.Interfaces.Common;
-using ICollection.DataAccess.Repositories.Common;
 using ICollection.Domain.Entities.Collections;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Common.Utils;
-using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Collections;
-using ICollection.Service.Dtos.CustomFields;
 using ICollection.Service.Interfaces.Collections;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Files;
 using ICollection.Service.ViewModels.CollectionViewModels;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Collections
 {
@@ -144,7 +135,7 @@ namespace ICollection.Service.Services.Collections
                         };
             return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
-        public async Task<bool> GetCollectionById(int userId,int collectionId)
+        public async Task<bool> GetCollectionById(int userId, int collectionId)
         {
             var res = await _unitOfWork.Collections.FindByIdAsync(collectionId);
             if (res is null)

@@ -5,7 +5,7 @@ namespace ICollection.Presentation.Areas.Admins.Controllers
 {
     [ApiController]
     [Area("admins")]
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles = "admin")]
     public class BaseController : Controller
     {
     }

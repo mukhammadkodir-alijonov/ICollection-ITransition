@@ -12,13 +12,7 @@ using ICollection.Service.Dtos.Users;
 using ICollection.Service.Interfaces.Accounts;
 using ICollection.Service.Interfaces.Common;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Accounts
 {

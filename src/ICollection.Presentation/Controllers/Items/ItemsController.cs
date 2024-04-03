@@ -1,12 +1,10 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using ICollection.Service.Common.Utils;
+﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Items;
 using ICollection.Service.Interfaces.Collections;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Items;
 using ICollection.Service.Interfaces.Likes;
 using ICollection.Service.Interfaces.Users;
-using ICollection.Service.Services.Items;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +21,7 @@ namespace ICollection.Presentation.Controllers.Items
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserService _userService;
 
-        public ItemsController(IitemService iitemService, IHttpContextAccessor httpContextAccessor, IUserService userService, ILikeService likeService,IIdentityService identityService,ICollectionService collectionService)
+        public ItemsController(IitemService iitemService, IHttpContextAccessor httpContextAccessor, IUserService userService, ILikeService likeService, IIdentityService identityService, ICollectionService collectionService)
         {
             this._iitemService = iitemService;
             this._collectionService = collectionService;
@@ -108,12 +106,13 @@ namespace ICollection.Presentation.Controllers.Items
         [HttpGet("update")]
         public IActionResult Update(int id)
         {
+            ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             ViewBag.Id = id;
             return View("Edit");
         }
         [Authorize]
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateAsync(int id,ItemUpdateDto item)
+        public async Task<IActionResult> UpdateAsync(int id, ItemUpdateDto item)
         {
             ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             try
@@ -131,50 +130,50 @@ namespace ICollection.Presentation.Controllers.Items
         }
         [Authorize]
         [HttpGet("likeitem")]
-        public async Task<IActionResult> LikeItem(int itemId,int collectionId)
+        public async Task<IActionResult> LikeItem(int id, int itemId)
         {
-            var id = collectionId;
+            ViewBag.CollectionId = id;
             try
             {
                 var res = await _likeService.LikeItemAsync(itemId);
                 if (res)
                 {
-                    return RedirectToAction("Index", "Items",id);
+                    return RedirectToAction("Index", "Items", new { id });
                 }
                 else
                 {
                     TempData["Error"] = "Failed to like item";
-                    return RedirectToAction("Index", "Items",id);
+                    return RedirectToAction("Index", "Items", new { id });
                 }
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", "Items",id);
+                return RedirectToAction("Index", "Items", new { id });
             }
         }
         [Authorize]
         [HttpGet("dislikeitem")]
-        public async Task<IActionResult> DislikeItem(int itemId, int collectionId)
+        public async Task<IActionResult> DislikeItem(int id, int itemId)
         {
-            var id = collectionId;
+            ViewBag.CollectionId = id;
             try
             {
                 var res = await _likeService.DislikeItemAsync(itemId);
                 if (res)
                 {
-                    return RedirectToAction("Index", "Items",id);
+                    return RedirectToAction("Index", "Items", new { id });
                 }
                 else
                 {
                     TempData["Error"] = "Failed to dislike item";
-                    return RedirectToAction("Index", "Items", id);
+                    return RedirectToAction("Index", "Items", new { id });
                 }
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", "Items",id);
+                return RedirectToAction("Index", "Items", new { id });
             }
         }
         private void SetTempMessage(bool success, string successMessage, string errorMessage)

@@ -1,6 +1,3 @@
-using DocumentFormat.OpenXml.Wordprocessing;
-using ICollection.DataAccess.Interfaces.Common;
-using ICollection.DataAccess.Repositories.Common;
 using ICollection.Presentation.Models;
 using ICollection.Service.Common.Utils;
 using ICollection.Service.Interfaces.Collections;
@@ -15,7 +12,7 @@ namespace ICollection.Presentation.Controllers
         private readonly ICollectionService _collectionService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger,ICollectionService collectionService,IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, ICollectionService collectionService, IHttpContextAccessor httpContextAccessor)
         {
             _contextAccessor = httpContextAccessor;
             _collectionService = collectionService;

@@ -31,18 +31,18 @@ namespace ICollection.Presentation.Configuration.LayerConfigurations
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<IAdminUserService,AdminUserService>();
+            services.AddScoped<IAdminUserService, AdminUserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<ICollectionService,CollectionService>();
-            services.AddScoped<ICommentService,CommentService>();
-            services.AddScoped<ICustomFieldService,CustomFieldService>();
-            services.AddScoped<IitemService,itemService>();
-            services.AddScoped<ILikeService,LikeService>();
-            services.AddScoped<ITagService,TagService>();
+            services.AddScoped<ICollectionService, CollectionService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ICustomFieldService, CustomFieldService>();
+            services.AddScoped<IitemService, itemService>();
+            services.AddScoped<ILikeService, LikeService>();
+            services.AddScoped<ITagService, TagService>();
             services.AddScoped<IUserService, UserService>();
 
             services.AddMemoryCache();

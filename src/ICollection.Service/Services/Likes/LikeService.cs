@@ -1,15 +1,9 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using ICollection.DataAccess.Interfaces.Common;
+﻿using ICollection.DataAccess.Interfaces.Common;
 using ICollection.Domain.Entities.Likes;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Likes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Likes
 {
@@ -18,7 +12,7 @@ namespace ICollection.Service.Services.Likes
         private readonly IIdentityService _identityService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public LikeService(IUnitOfWork unitOfWork,IIdentityService identityService)
+        public LikeService(IUnitOfWork unitOfWork, IIdentityService identityService)
         {
             this._identityService = identityService;
             this._unitOfWork = unitOfWork;
@@ -59,13 +53,11 @@ namespace ICollection.Service.Services.Likes
         }
         public async Task<bool> DislikeCollectionAsync(int collectionId)
         {
-            var userid = _identityService.Id ?? 0;
-            var unlike = _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId && x.UserId == userid);
+            var unlike = await _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId);
             if (unlike != null)
             {
                 _unitOfWork.Likes.Delete(unlike.Id);
-                await _unitOfWork.SaveChangesAsync(); 
-                return true; 
+                return 0 < await _unitOfWork.SaveChangesAsync();
             }
             else
             {
@@ -74,14 +66,13 @@ namespace ICollection.Service.Services.Likes
         }
         public async Task<bool> DislikeItemAsync(int itemId)
         {
-            var userid = _identityService.Id ?? 0;
-            var unlike = _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userid);
+            var unlike = await _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId);
             if (unlike != null)
             {
                 _unitOfWork.LikeItem.Delete(unlike.Id);
                 return 0 < await _unitOfWork.SaveChangesAsync();
             }
-            else 
+            else
                 throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is not liked");
         }
     }

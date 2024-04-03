@@ -1,13 +1,6 @@
 ﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Collections;
 using ICollection.Service.ViewModels.CollectionViewModels;
-using ICollection.Service.ViewModels.LikeViewModels;
-using ICollection.Service.ViewModels.UserViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Interfaces.Collections
 {
@@ -20,6 +13,6 @@ namespace ICollection.Service.Interfaces.Collections
         public Task<bool> CreateCollectionAsync(CollectionDto collectionCreateDto);
         public Task<bool> DeleteCollectionAsync(int id);
         public Task<bool> UpdateCollectionAsync(int id, CollectionUpdateDto collectionUpdateDto);
-        public Task<bool> GetCollectionById(int userId,int collectionId);
+        public Task<bool> GetCollectionById(int userId, int collectionId);
     }
 }

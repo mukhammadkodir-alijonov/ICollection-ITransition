@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using ICollection.Service.Common.Utils;
+﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Users;
 using ICollection.Service.Interfaces.Admins;
-using ICollection.Service.Interfaces.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Areas.Users.Controllers
@@ -13,18 +11,18 @@ namespace ICollection.Presentation.Areas.Users.Controllers
         private readonly IAdminUserService _adminUserService;
         private readonly int _pageSize = 10;
 
-        public HomeController(IAdminUserService adminUserService,IHttpContextAccessor httpContextAccessor)
+        public HomeController(IAdminUserService adminUserService, IHttpContextAccessor httpContextAccessor)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._adminUserService = adminUserService;
         }
         [HttpGet("adminusers")]
         public IActionResult Index()
-        
+
         {
             ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             var res = _adminUserService.GetAllAsync(new PaginationParams(1, _pageSize));
-            return View("Index",res);
+            return View("Index", res);
         }
         [HttpDelete("adminusers/delete")]
         public async Task<IActionResult> Delete(List<int> ids)

@@ -11,14 +11,8 @@ using ICollection.Service.Interfaces.Admins;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Files;
 using ICollection.Service.ViewModels.AdminViewModels;
-using ICollection.Service.ViewModels.CollectionViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Admins
 {
@@ -29,7 +23,7 @@ namespace ICollection.Service.Services.Admins
         private readonly IIdentityService _identityService;
         private readonly IFileService _fileService;
 
-        public AdminService(IUnitOfWork unitOfWork, IIdentityService identityService, IFileService fileService,IMapper mapper)
+        public AdminService(IUnitOfWork unitOfWork, IIdentityService identityService, IFileService fileService, IMapper mapper)
         {
             this._mapper = mapper;
             this._unitOfWork = unitOfWork;

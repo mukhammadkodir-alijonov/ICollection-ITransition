@@ -99,9 +99,6 @@ namespace ICollection.DataAccess.Migrations
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("LikeId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -166,9 +163,6 @@ namespace ICollection.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -183,8 +177,6 @@ namespace ICollection.DataAccess.Migrations
 
                     b.HasIndex("CollectionId");
 
-                    b.HasIndex("ItemId");
-
                     b.ToTable("CustomFields");
                 });
 
@@ -197,12 +189,6 @@ namespace ICollection.DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CollectionId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CommentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CostomFieldId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
@@ -399,7 +385,7 @@ namespace ICollection.DataAccess.Migrations
             modelBuilder.Entity("ICollection.Domain.Entities.Comments.Comment", b =>
                 {
                     b.HasOne("ICollection.Domain.Entities.Items.Item", "Item")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -422,10 +408,6 @@ namespace ICollection.DataAccess.Migrations
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ICollection.Domain.Entities.Items.Item", null)
-                        .WithMany("CustomFields")
-                        .HasForeignKey("ItemId");
 
                     b.Navigation("Collection");
                 });
@@ -452,7 +434,7 @@ namespace ICollection.DataAccess.Migrations
             modelBuilder.Entity("ICollection.Domain.Entities.Likes.Like", b =>
                 {
                     b.HasOne("ICollection.Domain.Entities.Collections.Collection", "Collection")
-                        .WithMany("Likes")
+                        .WithMany()
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -504,15 +486,6 @@ namespace ICollection.DataAccess.Migrations
 
             modelBuilder.Entity("ICollection.Domain.Entities.Collections.Collection", b =>
                 {
-                    b.Navigation("CustomFields");
-
-                    b.Navigation("Likes");
-                });
-
-            modelBuilder.Entity("ICollection.Domain.Entities.Items.Item", b =>
-                {
-                    b.Navigation("Comments");
-
                     b.Navigation("CustomFields");
                 });
 #pragma warning restore 612, 618

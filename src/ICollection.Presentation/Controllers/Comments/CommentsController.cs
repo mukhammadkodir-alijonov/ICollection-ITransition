@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
-using ICollection.Service.Common.Utils;
+﻿using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Comments;
 using ICollection.Service.Interfaces.Comments;
 using ICollection.Service.Interfaces.Users;
@@ -40,7 +38,7 @@ namespace ICollection.Presentation.Controllers.Comments
         }
         [Authorize]
         [HttpPost("create")]
-        public async Task<IActionResult> Create(int id,CommentDto commentDto)
+        public async Task<IActionResult> Create(int id, CommentDto commentDto)
         {
             ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             commentDto.ItemId = id;
@@ -48,17 +46,17 @@ namespace ICollection.Presentation.Controllers.Comments
             {
                 var success = await _commentService.CreateCommentAsync(commentDto);
                 SetTempMessage(success, "Comment created successfully", "Failed");
-                return RedirectToAction("Index","Comments", new { id });
+                return RedirectToAction("Index", "Comments", new { id });
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"An error occurred while creating the comment: {ex.Message}";
-                return RedirectToAction("Index", "Home"); 
+                return RedirectToAction("Index", "Home");
             }
         }
         [Authorize]
         [HttpGet("delete")]
-        public async Task<IActionResult> Delete(int id,int commentId)
+        public async Task<IActionResult> Delete(int id, int commentId)
         {
             ViewBag.Id = id;
             try

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using ICollection.DataAccess.Interfaces.Common;
-using ICollection.DataAccess.Repositories.Common;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Common.Security;
@@ -10,19 +8,12 @@ using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Users;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Users;
-using ICollection.Service.ViewModels.AdminViewModels;
 using ICollection.Service.ViewModels.CollectionViewModels;
 using ICollection.Service.ViewModels.CommentViewModels;
 using ICollection.Service.ViewModels.ItemViewModels;
 using ICollection.Service.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Users
 {
@@ -129,8 +120,6 @@ namespace ICollection.Service.Services.Users
         public async Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params)
         {
             var userid = _identityService.Id ?? 0;
-            //var query = _repository.Collections.GetAll().Where(x => x.UserId == userid).OrderBy(x => x.Id)
-            //    .Select(x => _mapper.Map<CollectionViewModel>(x));
             var query = (from item in _repository.Collections.GetAll()
                          .Where(x => x.UserId == userid).OrderBy(x => x.Id)
                          let isLiked = _repository.Likes.GetAll().Any(x => x.UserId == userid)
@@ -200,7 +189,7 @@ namespace ICollection.Service.Services.Users
         public async Task<PagedList<CommentViewModel>> GetAllComments(int id, PaginationParams @params)
         {
             var userid = _identityService.Id ?? 0;
-            var query = _repository.Comments.GetAll().Where(x => x.UserId == userid && x.ItemId == id).OrderBy(x => x.Id)
+            var query = _repository.Comments.GetAll().Where(x => x.ItemId == id).OrderBy(x => x.Id)
                 .Select(x => _mapper.Map<CommentViewModel>(x));
             return await PagedList<CommentViewModel>.ToPagedListAsync(query, @params);
         }

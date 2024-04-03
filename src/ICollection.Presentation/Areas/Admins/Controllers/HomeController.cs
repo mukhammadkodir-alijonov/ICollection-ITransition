@@ -2,7 +2,6 @@
 using ICollection.Service.Common.Utils;
 using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Interfaces.Admins;
-using ICollection.Service.Interfaces.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ICollection.Presentation.Areas.Admins.Controllers
@@ -24,57 +23,57 @@ namespace ICollection.Presentation.Areas.Admins.Controllers
         {
             ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             var res = await _adminService.GetAllAsync(new PaginationParams(1, _pageSize));
-            return View("Index",res);
+            return View("Index", res);
         }
-        [HttpDelete("admins/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete(List<int> ids)
         {
             var res = await _adminService.DeleteAsync(ids);
-            return View(res);
+            return res ? RedirectToAction("Index", "Home") : NotFound();
         }
-        [HttpPatch("admins/block")]
+        [HttpPost("block")]
         public async Task<IActionResult> Block(List<int> ids)
         {
             var res = await _adminService.BlockAsync(ids);
-            return View(res);
+            return res ? RedirectToAction("Index", "Home") : NotFound();
         }
-        [HttpPatch("admins/active")]
+        [HttpPost("active")]
         public async Task<IActionResult> Active(List<int> ids)
         {
             var res = await _adminService.ActiveAsync(ids);
-            return View(res);
+            return res ? RedirectToAction("Index", "Home") : NotFound();
         }
-        [HttpDelete("admins/deleteimage")]
+        [HttpDelete("deleteimage")]
         public async Task<IActionResult> DeleteImage(int id)
         {
             var res = await _adminService.DeleteImageAsync(id);
             return View(res);
         }
-        [HttpGet("admins/getall")]
+        [HttpGet("getall")]
         public async Task<IActionResult> GetAll(int page = 1)
         {
             var res = await _adminService.GetAllAsync(new PaginationParams(page, _pageSize));
             return View(res);
         }
-        [HttpPut("admins/update")]
+        [HttpPut("update")]
         public async Task<IActionResult> Update(int id, AdminUpdateDto model)
         {
             var res = await _adminService.UpdateAsync(id, model);
             return View(res);
         }
-        [HttpPatch("admins/updateimage")]
+        [HttpPatch("updateimage")]
         public async Task<IActionResult> UpdateImage(int id, IFormFile file)
         {
             var res = await _adminService.UpdateImageAsync(id, file);
             return View(res);
         }
-        [HttpPut("admins/updatepassword")]
+        [HttpPut("updatepassword")]
         public async Task<IActionResult> UpdatePassword(int id, PasswordUpdateDto dto)
         {
             var res = await _adminService.UpdatePasswordAsync(id, dto);
             return View(res);
         }
-        [HttpPost("admins/create")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(AdminRegisterDto model)
         {
             var res = await _adminService.CreateAdminAsync(model);

@@ -7,8 +7,50 @@
     <a asp-controller="collections" asp-action="create">Create a new collection</a>
 </p>
 <style>
-    /*  */
+    /* Style for table */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        /* Style for image */
+        .table img {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Style for name and description */
+        .table .text-start {
+            text-align: start;
+        }
+
+        /* Style for like button */
+        .table .like-button {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        /* Style for delete button */
+        .table .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .table .btn-danger:hover {
+                background-color: #c82333;
+            }
 </style>
+
 <table class="table">
     <thead>
         <tr>
@@ -53,7 +95,13 @@
                     <span class="fw-bold text-gray-500">@item.LikeCount</span>
                 </td>
                 <td>
-                    @{
+                    <a asp-controller="collections" asp-action="dislikecollection" asp-route-collectionId="@item.Id">
+                        <img src="~/media/images/heart.svg" alt="Image" style="width: 40px; height: 40px;" />
+                    </a>
+                    <a asp-controller="collections" asp-action="likecollection" asp-route-collectionId="@item.Id">
+                        <img src="~/media/images/heart-solid.svg" alt="Image" style="width: 40px; height: 40px;" />
+                    </a>
+                    @* @{
                         if (item.isLiked == true)
                         {
                             <a asp-controller="collections" asp-action="dislikecollection" asp-route-collectionId="@item.Id">
@@ -66,7 +114,7 @@
                                 <img src="~/media/images/heart.svg" alt="Image" style="width: 40px; height: 40px;" />
                             </a>
                         }
-                    }
+                    } *@
                 </td>
                 <td>
                     <a asp-controller="items" asp-action="Index" asp-route-id="@item.Id">View Items</a> --

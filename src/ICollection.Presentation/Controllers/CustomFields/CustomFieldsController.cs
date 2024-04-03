@@ -17,7 +17,7 @@ namespace ICollection.Presentation.Controllers.CustomFields
         {
             try
             {
-                var success = await _customFieldService.CreateCustomFieldAsync(id,customFieldDto);
+                var success = await _customFieldService.CreateCustomFieldAsync(id, customFieldDto);
                 SetTempMessage(success, "CustomField created successfully", "Failed");
                 return View(success);
             }

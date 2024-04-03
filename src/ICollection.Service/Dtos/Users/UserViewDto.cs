@@ -2,15 +2,10 @@
 using ICollection.Domain.Entities.Collections;
 using ICollection.Domain.Entities.Users;
 using ICollection.Service.Dtos.Files;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Dtos.Users
 {
-    public class UserViewDto :BaseEntity
+    public class UserViewDto : BaseEntity
     {
         public string UserName { get; set; } = String.Empty;
 
@@ -18,7 +13,7 @@ namespace ICollection.Service.Dtos.Users
         public List<Collection>? Collections { get; set; }
 
         public DateTime BirthDate { get; set; }
-        
+
         public DateTime CreatedAt { get; set; }
 
         public FileModelDto? FileModel { get; set; }
@@ -31,7 +26,7 @@ namespace ICollection.Service.Dtos.Users
                 UserName = user.UserName,
                 ImagePath = user.Image!,
                 BirthDate = user.BirthDate,
-                CreatedAt = user.CreatedAt,    
+                CreatedAt = user.CreatedAt,
             };
         }
     }

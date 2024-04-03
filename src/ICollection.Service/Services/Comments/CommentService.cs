@@ -5,13 +5,7 @@ using ICollection.Service.Common.Helpers;
 using ICollection.Service.Dtos.Comments;
 using ICollection.Service.Interfaces.Comments;
 using ICollection.Service.Interfaces.Common;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Comments
 {

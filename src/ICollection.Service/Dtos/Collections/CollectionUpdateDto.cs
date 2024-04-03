@@ -1,13 +1,6 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using ICollection.Domain.Entities.Collections;
-using ICollection.Domain.Enums;
+﻿using ICollection.Domain.Enums;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Dtos.Collections
 {
@@ -24,16 +17,16 @@ namespace ICollection.Service.Dtos.Collections
         public IFormFile? Image { get; set; }
         public string ImagePath { get; set; } = string.Empty;
         public int CostomFieldId { get; set; }
-/*        public static implicit operator Collection(CollectionUpdateDto v)
-        {
-            return new Collection
-            {
-                Id = v.Id,
-                Name = v.Name,
-                Description = v.Description,
-                Topics = v.Topics,
-                Image = v.ImagePath,
-            };
-        }*/
+        /*        public static implicit operator Collection(CollectionUpdateDto v)
+                {
+                    return new Collection
+                    {
+                        Id = v.Id,
+                        Name = v.Name,
+                        Description = v.Description,
+                        Topics = v.Topics,
+                        Image = v.ImagePath,
+                    };
+                }*/
     }
 }

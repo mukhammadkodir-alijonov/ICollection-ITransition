@@ -17,9 +17,9 @@ namespace ICollection.Presentation.Configuration
         {
             CreateMap<AdminRegisterDto, Admin>().ReverseMap();
             CreateMap<AccountRegisterDto, User>().ReverseMap();
-            CreateMap<ItemViewModel,Item>().ReverseMap();
-            CreateMap<UserViewModel,User>().ReverseMap();
-            CreateMap<CommentViewModel,Comment>().ReverseMap();
+            CreateMap<ItemViewModel, Item>().ReverseMap();
+            CreateMap<UserViewModel, User>().ReverseMap();
+            CreateMap<CommentViewModel, Comment>().ReverseMap();
         }
     }
 }

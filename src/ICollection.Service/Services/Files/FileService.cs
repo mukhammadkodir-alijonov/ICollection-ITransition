@@ -3,11 +3,6 @@ using ICollection.Service.Dtos.Files;
 using ICollection.Service.Interfaces.Files;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Files
 {

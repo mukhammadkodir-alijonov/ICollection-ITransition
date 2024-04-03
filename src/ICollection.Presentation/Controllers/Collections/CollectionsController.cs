@@ -3,7 +3,6 @@ using ICollection.Service.Dtos.Collections;
 using ICollection.Service.Interfaces.Collections;
 using ICollection.Service.Interfaces.Likes;
 using ICollection.Service.Interfaces.Users;
-using ICollection.Service.ViewModels.CollectionViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +31,7 @@ namespace ICollection.Presentation.Controllers.Collections
             var res = await _userService.GetAllCollectionAsync(new PaginationParams(1, _pageSize));
             return View(res);
         }
-        
+
         [HttpGet("search")]
         public async Task<IActionResult> SearchAsync(string name, int page = 1)
         {
@@ -40,7 +39,7 @@ namespace ICollection.Presentation.Controllers.Collections
             {
                 ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
                 var res = await _collectionService.SearchAsync(new PaginationParams(page, _pageSize), name);
-                return View("Index",res);
+                return View("Index", res);
             }
             catch (Exception ex)
             {
@@ -101,6 +100,7 @@ namespace ICollection.Presentation.Controllers.Collections
         [HttpGet("update")]
         public ActionResult Update(int id)
         {
+            ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             ViewBag.Id = id;
             return View("Edit");
         }

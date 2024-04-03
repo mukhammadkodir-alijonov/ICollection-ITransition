@@ -4,40 +4,51 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-    .user-info {
-        text-align: right;
-        padding: 10px;
-    }
-
-        .user-info a {
-            margin-left: 10px;
-        }
-
-    .user-registry-container {
-        margin-top: 20px;
-    }
-
-    .user-registry {
+    /* Style for table */
+    .table {
         width: 100%;
         border-collapse: collapse;
     }
 
-        .user-registry caption {
-            font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-
-        .user-registry th, .user-registry td {
-            border: 1px solid #FF204E;
+        .table th, .table td {
             padding: 8px;
+            border: 1px solid #ddd;
             text-align: left;
         }
 
-        .user-registry th {
-            background-color: #FF204E;
+        /* Style for image */
+        .table img {
+            width: 80px;
+            height: 80px;
         }
+
+        /* Style for name and description */
+        .table .text-start {
+            text-align: start;
+        }
+
+        /* Style for like button */
+        .table .like-button {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        /* Style for delete button */
+        .table .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .table .btn-danger:hover {
+                background-color: #c82333;
+            }
 </style>
+
+
 <form asp-controller="collections" asp-action="search" method="get">
     <p>
         Title: <input type="text" name="name" />
@@ -100,7 +111,7 @@
                     <a asp-controller="collections" asp-action="likecollection" asp-route-collectionId="@item.Id">
                         <img src="~/media/images/heart-solid.svg" alt="Image" style="width: 40px; height: 40px;" />
                     </a>
-                    @*                     @{
+                                       @*  @{
                 if (item.isLiked == true)
                 {
                 <a asp-controller="collections" asp-action="dislikecollection" asp-route-collectionId="@item.Id">

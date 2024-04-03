@@ -1,14 +1,6 @@
 ﻿using ICollection.Service.Common.Utils;
-using ICollection.Service.Dtos.Admins;
 using ICollection.Service.Dtos.Users;
-using ICollection.Service.ViewModels.AdminViewModels;
 using ICollection.Service.ViewModels.UserViewModels;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Interfaces.Admins
 {

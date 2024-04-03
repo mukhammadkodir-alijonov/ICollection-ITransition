@@ -1,12 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using ICollection.Service.ViewModels.CollectionViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ICollection.Service.ViewModels.ItemViewModels
+﻿namespace ICollection.Service.ViewModels.ItemViewModels
 {
     public class ItemViewModel
     {

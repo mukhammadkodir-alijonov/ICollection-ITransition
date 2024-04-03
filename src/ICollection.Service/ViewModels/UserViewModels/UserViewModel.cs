@@ -1,12 +1,4 @@
-﻿using ICollection.Domain.Entities.Admins;
-using ICollection.Domain.Entities.Users;
-using ICollection.Domain.Enums;
-using ICollection.Service.ViewModels.AdminViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ICollection.Domain.Enums;
 
 namespace ICollection.Service.ViewModels.UserViewModels
 {
@@ -20,19 +12,19 @@ namespace ICollection.Service.ViewModels.UserViewModels
         public Role UserRole { get; set; } = Role.User;
         public DateTime BirthDate { get; set; } = default!;
         public DateTime CreatedAt { get; set; } = default!;
-/*        public static implicit operator UserViewModel(User model)
-        {
-            return new UserViewModel()
-            {
-                Id = model.Id,
-                UserName = model.UserName,
-                ImagePath = model.Image,
-                Email = model.Email,
-                StatusType = model.Status,
-                UserRole = model.UserRole,
-                BirthDate = model.BirthDate,
-                CreatedAt = model.CreatedAt
-            };
-        }*/
+        /*        public static implicit operator UserViewModel(User model)
+                {
+                    return new UserViewModel()
+                    {
+                        Id = model.Id,
+                        UserName = model.UserName,
+                        ImagePath = model.Image,
+                        Email = model.Email,
+                        StatusType = model.Status,
+                        UserRole = model.UserRole,
+                        BirthDate = model.BirthDate,
+                        CreatedAt = model.CreatedAt
+                    };
+                }*/
     }
 }

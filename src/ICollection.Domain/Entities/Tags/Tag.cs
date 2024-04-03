@@ -1,5 +1,4 @@
 ﻿using ICollection.Domain.Common;
-using ICollection.Domain.Entities.Collections;
 using ICollection.Domain.Entities.Items;
 
 namespace ICollection.Domain.Entities.Tags

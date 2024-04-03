@@ -3,11 +3,6 @@ using ICollection.Domain.Entities.CustomFields;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Dtos.CustomFields;
 using ICollection.Service.Interfaces.CustomFields;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.CustomFields
 {
@@ -19,7 +14,7 @@ namespace ICollection.Service.Services.CustomFields
         {
             this._unitOfWork = unitOfWork;
         }
-        public async Task<bool> CreateCustomFieldAsync(int id,CustomFieldDto customFieldDto)
+        public async Task<bool> CreateCustomFieldAsync(int id, CustomFieldDto customFieldDto)
         {
             var field = await _unitOfWork.CustomFields.FirstOrDefault(x => x.Id == id);
             if (field == null)

@@ -1,14 +1,7 @@
 ﻿using ICollection.DataAccess.Interfaces.Common;
 using ICollection.Domain.Entities.Items;
 using ICollection.Domain.Entities.Tags;
-using ICollection.Service.Common.Exceptions;
-using ICollection.Service.Dtos.Tags;
 using ICollection.Service.Interfaces.Tags;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ICollection.Service.Services.Tags
 {
