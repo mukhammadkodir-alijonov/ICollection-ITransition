@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ICollection.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240403115814_InitialComment")]
-    partial class InitialComment
+    [Migration("20240403194227_InitilCommentForAzurePostgrSsql")]
+    partial class InitilCommentForAzurePostgrSsql
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
