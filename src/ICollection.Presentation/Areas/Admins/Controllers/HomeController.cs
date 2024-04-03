@@ -25,55 +25,55 @@ namespace ICollection.Presentation.Areas.Admins.Controllers
             var res = await _adminService.GetAllAsync(new PaginationParams(1, _pageSize));
             return View("Index", res);
         }
-        [HttpPost("delete")]
+        [HttpPost("admins/delete")]
         public async Task<IActionResult> Delete(List<int> ids)
         {
             var res = await _adminService.DeleteAsync(ids);
             return res ? RedirectToAction("Index", "Home") : NotFound();
         }
-        [HttpPost("block")]
+        [HttpPost("admins/block")]
         public async Task<IActionResult> Block(List<int> ids)
         {
             var res = await _adminService.BlockAsync(ids);
             return res ? RedirectToAction("Index", "Home") : NotFound();
         }
-        [HttpPost("active")]
+        [HttpPost("admins/active")]
         public async Task<IActionResult> Active(List<int> ids)
         {
             var res = await _adminService.ActiveAsync(ids);
             return res ? RedirectToAction("Index", "Home") : NotFound();
         }
-        [HttpDelete("deleteimage")]
+        [HttpDelete("admins/deleteimage")]
         public async Task<IActionResult> DeleteImage(int id)
         {
             var res = await _adminService.DeleteImageAsync(id);
             return View(res);
         }
-        [HttpGet("getall")]
+        [HttpGet("admins/getall")]
         public async Task<IActionResult> GetAll(int page = 1)
         {
             var res = await _adminService.GetAllAsync(new PaginationParams(page, _pageSize));
             return View(res);
         }
-        [HttpPut("update")]
+        [HttpPut("admins/update")]
         public async Task<IActionResult> Update(int id, AdminUpdateDto model)
         {
             var res = await _adminService.UpdateAsync(id, model);
             return View(res);
         }
-        [HttpPatch("updateimage")]
+        [HttpPatch("admins/updateimage")]
         public async Task<IActionResult> UpdateImage(int id, IFormFile file)
         {
             var res = await _adminService.UpdateImageAsync(id, file);
             return View(res);
         }
-        [HttpPut("updatepassword")]
+        [HttpPut("admins/updatepassword")]
         public async Task<IActionResult> UpdatePassword(int id, PasswordUpdateDto dto)
         {
             var res = await _adminService.UpdatePasswordAsync(id, dto);
             return View(res);
         }
-        [HttpPost("create")]
+        [HttpPost("admins/create")]
         public async Task<IActionResult> Create(AdminRegisterDto model)
         {
             var res = await _adminService.CreateAdminAsync(model);

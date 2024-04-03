@@ -133,7 +133,7 @@ namespace ICollection.Service.Services.Users
                              ImagePath = item.Image,
                              LikeCount = likeCount,
                              UserId = userid,
-                             isLiked = isLiked != null
+                             isLiked = isLiked
                          });
             return await PagedList<CollectionViewModel>.ToPagedListAsync(query, @params);
         }
