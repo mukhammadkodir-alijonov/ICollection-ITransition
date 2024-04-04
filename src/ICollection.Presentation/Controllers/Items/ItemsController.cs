@@ -53,6 +53,7 @@ namespace ICollection.Presentation.Controllers.Items
         [HttpGet("create")]
         public async Task<IActionResult> Create(int collectionId)
         {
+            ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             var userId = _identityService.Id ?? 0;
             var res = await _collectionService.GetCollectionById(userId, collectionId);
             if (res == true)

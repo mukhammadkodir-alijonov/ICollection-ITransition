@@ -53,8 +53,9 @@ namespace ICollection.Service.Services.Likes
         }
         public async Task<bool> DislikeCollectionAsync(int collectionId)
         {
-            var unlike = await _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId);
-            if (unlike != null)
+            var userid = _identityService.Id ?? 0;
+            var unlike = await _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId && x.UserId == userid);
+            if (userid == unlike?.UserId && unlike != null)
             {
                 _unitOfWork.Likes.Delete(unlike.Id);
                 return 0 < await _unitOfWork.SaveChangesAsync();
@@ -66,8 +67,9 @@ namespace ICollection.Service.Services.Likes
         }
         public async Task<bool> DislikeItemAsync(int itemId)
         {
-            var unlike = await _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId);
-            if (unlike != null)
+            var userid = _identityService.Id ?? 0;
+            var unlike = await _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userid);
+            if (userid == unlike?.UserId && unlike != null)
             {
                 _unitOfWork.LikeItem.Delete(unlike.Id);
                 return 0 < await _unitOfWork.SaveChangesAsync();

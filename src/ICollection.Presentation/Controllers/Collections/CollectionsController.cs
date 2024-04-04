@@ -50,6 +50,7 @@ namespace ICollection.Presentation.Controllers.Collections
         [HttpGet("create")]
         public IActionResult Create()
         {
+            ViewBag.UserName = _httpContextAccessor.HttpContext?.User.FindFirst("UserName")?.Value;
             return View("Create");
         }
 

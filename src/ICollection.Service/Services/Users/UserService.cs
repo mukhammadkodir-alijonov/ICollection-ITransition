@@ -120,17 +120,17 @@ namespace ICollection.Service.Services.Users
         public async Task<PagedList<CollectionViewModel>> GetAllCollectionAsync(PaginationParams @params)
         {
             var userid = _identityService.Id ?? 0;
-            var query = (from item in _repository.Collections.GetAll()
+            var query = (from collection in _repository.Collections.GetAll()
                          .Where(x => x.UserId == userid).OrderBy(x => x.Id)
                          let isLiked = _repository.Likes.GetAll().Any(x => x.UserId == userid)
-                         let likeCount = _repository.Likes.GetAll().Count()
+                         let likeCount = _repository.Likes.GetAll().Where(x => x.CollectionId == collection.Id).Count()
                          orderby likeCount descending
                          select new CollectionViewModel
                          {
-                             Id = item.Id,
-                             Name = item.Name,
-                             Description = item.Description,
-                             ImagePath = item.Image,
+                             Id = collection.Id,
+                             Name = collection.Name,
+                             Description = collection.Description,
+                             ImagePath = collection.Image,
                              LikeCount = likeCount,
                              UserId = userid,
                              isLiked = isLiked

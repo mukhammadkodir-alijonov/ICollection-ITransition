@@ -53,8 +53,8 @@ namespace ICollection.Service.Services.Items
         public async Task<bool> DeleteItemAsync(int id)
         {
             var userid = _identityService.Id ?? 0;
-            var userincollection = await _unitOfWork.Iitems.FindByIdAsync(id);
-            if (userid == userincollection?.UserId)
+            var userinitem = await _unitOfWork.Iitems.FindByIdAsync(id);
+            if (userid == userinitem?.UserId)
             {
                 var item = await _unitOfWork.Iitems.FindByIdAsync(id);
                 if (item is null)

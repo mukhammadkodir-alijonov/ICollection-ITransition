@@ -117,7 +117,6 @@ namespace ICollection.Service.Services.Collections
         }
         public async Task<PagedList<CollectionViewModel>> TopCollection(PaginationParams @params)
         {
-            var userid = _identityService.Id ?? 0;
             var query = from collection in _unitOfWork.Collections.GetAll()
                         let likeCount = _unitOfWork.Likes.GetAll().Where(x => x.CollectionId == collection.Id).Count()
                         orderby likeCount descending
@@ -128,7 +127,6 @@ namespace ICollection.Service.Services.Collections
                             Description = collection.Description,
                             Topics = collection.Topics,
                             ImagePath = collection.Image,
-                            UserId = userid,
                             CreatedAt = collection.CreatedAt,
                             LastUpdatedAt = collection.LastUpdatedAt,
                             LikeCount = likeCount
