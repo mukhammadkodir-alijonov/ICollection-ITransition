@@ -2,9 +2,7 @@
 {
     public interface ILikeService
     {
-        public Task<bool> LikeCollectionAsync(int collectionId);
-        public Task<bool> LikeItemAsync(int itemId);
-        public Task<bool> DislikeCollectionAsync(int collectionId);
-        public Task<bool> DislikeItemAsync(int itemId);
+        public Task<bool> ToggleCollection(int collectionId);
+        public Task<bool> ToggleItem(int itemId);
     }
 }

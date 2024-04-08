@@ -136,7 +136,7 @@ namespace ICollection.Presentation.Controllers.Items
             ViewBag.CollectionId = id;
             try
             {
-                var res = await _likeService.LikeItemAsync(itemId);
+                var res = await _likeService.ToggleItem(itemId);
                 if (res)
                 {
                     return RedirectToAction("Index", "Items", new { id });
@@ -144,30 +144,6 @@ namespace ICollection.Presentation.Controllers.Items
                 else
                 {
                     TempData["Error"] = "Failed to like item";
-                    return RedirectToAction("Index", "Items", new { id });
-                }
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", "Items", new { id });
-            }
-        }
-        [Authorize]
-        [HttpGet("dislikeitem")]
-        public async Task<IActionResult> DislikeItem(int id, int itemId)
-        {
-            ViewBag.CollectionId = id;
-            try
-            {
-                var res = await _likeService.DislikeItemAsync(itemId);
-                if (res)
-                {
-                    return RedirectToAction("Index", "Items", new { id });
-                }
-                else
-                {
-                    TempData["Error"] = "Failed to dislike item";
                     return RedirectToAction("Index", "Items", new { id });
                 }
             }

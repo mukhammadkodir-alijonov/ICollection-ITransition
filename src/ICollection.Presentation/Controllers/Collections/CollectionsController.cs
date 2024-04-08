@@ -149,7 +149,7 @@ namespace ICollection.Presentation.Controllers.Collections
         {
             try
             {
-                var res = await _likeService.LikeCollectionAsync(collectionId);
+                var res = await _likeService.ToggleCollection(collectionId);
                 if (res)
                 {
                     return RedirectToAction("Index", "Home");
@@ -157,29 +157,6 @@ namespace ICollection.Presentation.Controllers.Collections
                 else
                 {
                     TempData["Error"] = "Failed to like collection";
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = ex.Message;
-                return RedirectToAction("Index", "Home");
-            }
-        }
-        [Authorize]
-        [HttpGet("dislikecollection")]
-        public async Task<IActionResult> DislikeCollection(int collectionId)
-        {
-            try
-            {
-                var res = await _likeService.DislikeCollectionAsync(collectionId);
-                if (res)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    TempData["Error"] = "Failed to dislike collection";
                     return RedirectToAction("Index", "Home");
                 }
             }

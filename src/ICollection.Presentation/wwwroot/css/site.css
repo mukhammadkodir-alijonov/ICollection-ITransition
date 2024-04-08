@@ -83,15 +83,8 @@ body {
         }
 
 /*for like*/
-
-.fa {
-    font-size: 50px;
-    cursor: pointer;
-    user-select: none;
-    width: 60px;
-    height: 60px;
+.like-button {
+    background-color: white;
+    color: black;
+    /* Add your other styles here */
 }
-
-    .fa:hover {
-        color: darkblue;
-    }

@@ -1,4 +1,5 @@
-﻿using ICollection.DataAccess.Interfaces.Common;
+﻿using DocumentFormat.OpenXml.Drawing.Wordprocessing;
+using ICollection.DataAccess.Interfaces.Common;
 using ICollection.Domain.Entities.Likes;
 using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
@@ -17,11 +18,16 @@ namespace ICollection.Service.Services.Likes
             this._identityService = identityService;
             this._unitOfWork = unitOfWork;
         }
-        public async Task<bool> LikeCollectionAsync(int collectionId)
+        public async Task<bool> ToggleCollection(int collectionId)
         {
             var userid = _identityService.Id ?? 0;
             var likeCollection = await _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId && x.UserId == userid);
-            if (likeCollection == null)
+            if (likeCollection != null && userid == likeCollection?.UserId)
+            {
+                _unitOfWork.Likes.Delete(likeCollection.Id);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else
             {
                 var entity = new Like
                 {
@@ -30,15 +36,20 @@ namespace ICollection.Service.Services.Likes
                     CreatedAt = TimeHelper.GetCurrentServerTime()
                 };
                 var res = _unitOfWork.Likes.Add(entity);
-                return await _unitOfWork.SaveChangesAsync() > 0;
+                await _unitOfWork.SaveChangesAsync();
             }
-            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is already liked");
+            return true;
         }
-        public async Task<bool> LikeItemAsync(int itemId)
+        public async Task<bool> ToggleItem(int itemId)
         {
             var userid = _identityService.Id ?? 0;
             var likeItem = await _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userid);
-            if (likeItem == null)
+            if (likeItem != null && userid == likeItem?.UserId)
+            {
+                _unitOfWork.LikeItem.Delete(likeItem.Id);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else
             {
                 var entity = new LikeItem
                 {
@@ -47,35 +58,9 @@ namespace ICollection.Service.Services.Likes
                     CreatedAt = TimeHelper.GetCurrentServerTime()
                 };
                 var res = _unitOfWork.LikeItem.Add(entity);
-                return await _unitOfWork.SaveChangesAsync() > 0;
+                await _unitOfWork.SaveChangesAsync();
             }
-            else throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is already liked");
-        }
-        public async Task<bool> DislikeCollectionAsync(int collectionId)
-        {
-            var userid = _identityService.Id ?? 0;
-            var unlike = await _unitOfWork.Likes.FirstOrDefault(x => x.CollectionId == collectionId && x.UserId == userid);
-            if (userid == unlike?.UserId && unlike != null)
-            {
-                _unitOfWork.Likes.Delete(unlike.Id);
-                return 0 < await _unitOfWork.SaveChangesAsync();
-            }
-            else
-            {
-                throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Collection is not liked");
-            }
-        }
-        public async Task<bool> DislikeItemAsync(int itemId)
-        {
-            var userid = _identityService.Id ?? 0;
-            var unlike = await _unitOfWork.LikeItem.FirstOrDefault(x => x.ItemId == itemId && x.UserId == userid);
-            if (userid == unlike?.UserId && unlike != null)
-            {
-                _unitOfWork.LikeItem.Delete(unlike.Id);
-                return 0 < await _unitOfWork.SaveChangesAsync();
-            }
-            else
-                throw new StatusCodeException(System.Net.HttpStatusCode.BadRequest, "Item is not liked");
+            return true;
         }
     }
 }
