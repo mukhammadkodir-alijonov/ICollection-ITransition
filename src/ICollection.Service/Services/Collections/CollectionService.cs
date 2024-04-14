@@ -119,7 +119,7 @@ namespace ICollection.Service.Services.Collections
         {
             var query = from collection in _unitOfWork.Collections.GetAll()
                         let likeCount = _unitOfWork.Likes.GetAll().Count(x => x.CollectionId == collection.Id)
-                        orderby likeCount descending, collection.CreatedAt descending
+                        orderby likeCount descending
                         select new CollectionViewModel()
                         {
                             Id = collection.Id,
