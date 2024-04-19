@@ -1,7 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Wordprocessing;
-using ICollection.DataAccess.Interfaces.Common;
+﻿using ICollection.DataAccess.Interfaces.Common;
 using ICollection.Domain.Entities.Likes;
-using ICollection.Service.Common.Exceptions;
 using ICollection.Service.Common.Helpers;
 using ICollection.Service.Interfaces.Common;
 using ICollection.Service.Interfaces.Likes;

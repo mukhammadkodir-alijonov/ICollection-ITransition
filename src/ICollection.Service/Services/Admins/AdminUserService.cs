@@ -90,18 +90,6 @@ namespace ICollection.Service.Services.Admins
             }
         }
 
-        /*        public async Task<List<UserViewModel>> GetAllAsync(string search)
-                {
-                    var query = _unitOfWork.Users.GetAll();
-                    if (!string.IsNullOrEmpty(search))
-                    {
-                        query = query.Where(x => x.UserName.ToLower().StartsWith(search.ToLower()));
-                    }
-
-                    var result = await query.OrderByDescending(x => x.CreatedAt).Select(x => (UserViewModel)x).ToListAsync();
-                    return result;
-                }*/
-
         public async Task<PagedList<UserViewModel>> GetAllAsync(PaginationParams @params)
         {
             var query = _unitOfWork.Admins.GetAll().OrderBy(x => x.Id)
