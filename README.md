@@ -1,15 +1,12 @@
 # ICollection-ITransition
-This repository contains the implementation of the ICollection and ITransition interfaces, along with their corresponding data structures and algorithms. These interfaces are designed to manage collections of items and handle transitions or state changes within these collections.
+ ICollection is a useful web platform designed for collectors that is created on asp.net MVC,
+ .net 8 and PostgreSQL.
 
-Repository Structure
-# Interfaces
+ Allows users to create collections,items and can like and comment.
 
-ICollection: Defines the methods for adding, removing, and retrieving items in a collection.
-ITransition: Specifies the methods for handling state transitions of items within the collection.
 # Implementations
 
 Concrete classes implementing ICollection, providing various types of collections (e.g., lists, sets).
-Classes implementing ITransition, managing the state changes of items.
 # Data Structures
 
 Custom data structures that support the functionalities of ICollection and ITransition.
